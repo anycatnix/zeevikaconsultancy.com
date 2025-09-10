@@ -229,6 +229,31 @@ class JobPost(models.Model):
         if self.expires_at:
             from django.utils import timezone
             return timezone.now() > self.expires_at
+            
+    @property
+    def short_description(self):
+        """Returns a clean, truncated version of the job description for meta tags."""
+        if not getattr(self, 'description', None):
+            return f"{self.title} at {self.company_name} - {self.get_job_type_display()} position"
+        # Remove HTML tags and extra whitespace
+        import re
+        clean_text = re.sub(r'<[^>]*>', ' ', str(self.description))
+        clean_text = ' '.join(clean_text.split())
+        return clean_text[:300]  # Return first 300 chars
+        
+    def get_share_image_absolute_url(self):
+        from django.conf import settings
+        from django.templatetags.static import static
+        
+        base_url = getattr(settings, 'SITE_URL', 'https://zeevikaconsultancy.com')
+        
+        # First try company logo
+        if self.company_logo:
+            return f"{base_url}{self.company_logo.url}"
+            
+        # Fallback to default share image
+        default_image = static('images/og-default.jpg')
+        return f"{base_url}{default_image}"
         return False
 
 

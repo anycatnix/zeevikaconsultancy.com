@@ -11,7 +11,6 @@ class BlogAdmin(admin.ModelAdmin):
     search_fields = ['title', 'description', 'content']
     prepopulated_fields = {'slug': ('title',)}
     readonly_fields = ['created_at', 'updated_at', 'published_at']
-    filter_horizontal = ['tags']
     fieldsets = (
         ('Content', {
             'fields': ('title', 'slug', 'description', 'content', 'image')

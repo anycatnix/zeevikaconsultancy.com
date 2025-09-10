@@ -68,7 +68,6 @@ class JobPostAdmin(admin.ModelAdmin):
     ]
     prepopulated_fields = {'slug': ('title',)}
     readonly_fields = ['created_at', 'updated_at']
-    filter_horizontal = ['skills']
     fieldsets = (
         ('Basic Information', {
             'fields': ('title', 'slug', 'job_type', 'company_name', 'company_logo')

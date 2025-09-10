@@ -1,15 +1,30 @@
 {% extends 'base.html' %}
 {% load static %}
 
-{% block title %}{{ job.title }} at {{ job.company_name }} - JobPortal{% endblock %}
-{% block meta_description %}{{ job.meta_description|default:job.description|truncatewords:25 }}{% endblock %}
-{% block meta_keywords %}{{ job.meta_keywords|default:"job, career, employment" }}{% endblock %}
-{% block og_title %}{{ job.title }} at {{ job.company_name }}{% endblock %}
-{% block og_description %}{{ job.meta_description|default:job.description|truncatewords:25 }}{% endblock %}
-{% block og_image %}{% if job.company_logo %}{{ request.scheme }}://{{ request.get_host }}{{ job.company_logo.url }}{%
-else %}{{ request.scheme }}://{{ request.get_host }}{% static 'site/zeevika-logo.png' %}{% endif %}{% endblock %}
-{% block twitter_image %}{% if job.company_logo %}{{ request.scheme }}://{{ request.get_host }}{{ job.company_logo.url
-}}{% else %}{{ request.scheme }}://{{ request.get_host }}{% static 'site/zeevika-logo.png' %}{% endif %}{% endblock %}
+{% block title %}{{ job.title }} | Zeevika Consultancy{% endblock %}
+{% block meta_description %}{{ job.meta_description|default:job.short_description|default:''|truncatechars:160|striptags }}{% endblock %}
+{% block meta_keywords %}{{ job.meta_keywords|default:"job, career, employment, "|add:job.title|add:", "|add:job.city.name|add:", "|add:job.state.name }}{% endblock %}
+
+{% block extra_meta %}
+<!-- Open Graph / Facebook -->
+<meta property="og:url" content="{{ request.scheme }}://{{ request.get_host }}{{ request.path }}">
+<meta property="og:type" content="article">
+<meta property="og:title" content="{{ job.title }} | Zeevika Consultancy">
+<meta property="og:description" content="{{ job.meta_description|default:job.short_description|default:''|truncatechars:160|striptags }}">
+<meta property="og:image" content="{{ job.get_share_image_absolute_url }}">
+<meta property="og:image:secure_url" content="{{ job.get_share_image_absolute_url }}">
+<meta property="og:image:type" content="image/jpeg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:site_name" content="Zeevika Consultancy">
+
+<!-- Twitter -->
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="{{ job.title }} | Zeevika Consultancy">
+<meta name="twitter:description" content="{{ job.meta_description|default:job.short_description|default:''|truncatechars:160|striptags }}">
+<meta name="twitter:image" content="{{ job.get_share_image_absolute_url }}">
+<meta name="twitter:site" content="@ZeevikaConsult">
+{% endblock %}
 {% block jsonld %}
 <script type="application/ld+json">
 {

@@ -29,6 +29,9 @@ DEBUG = config('DEBUG', default=True, cast=bool)
 
 ALLOWED_HOSTS = ['*']
 
+# Site URL for absolute URLs in templates
+SITE_URL = config('SITE_URL', default='https://zeevikaconsultancy.com')
+
 
 # Application definition
 
@@ -48,6 +51,7 @@ INSTALLED_APPS = [
     'ckeditor_uploader',
     'django_cleanup.apps.CleanupConfig',
     'crispy_forms',
+    'debug_toolbar',  # Debug toolbar for development
     'crispy_tailwind',
     'taggit',
     'simple_history',
@@ -69,6 +73,7 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'simple_history.middleware.HistoryRequestMiddleware',
+    'debug_toolbar.middleware.DebugToolbarMiddleware',  # Debug toolbar
 ]
 
 ROOT_URLCONF = 'jobportal.urls'

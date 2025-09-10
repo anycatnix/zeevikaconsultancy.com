@@ -1,0 +1,9 @@
+User-agent: *
+Allow: /
+Allow: /jobs/
+Allow: /blogs/
+Allow: /about/
+Allow: /contact/
+
+# Sitemaps
+Sitemap: https://zeevikaconsultancy.com/sitemap.xml
