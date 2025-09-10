@@ -1,37 +1,67 @@
 {% extends 'base.html' %} {% load static %} {% block title %}{{ job.title }} |
-Zeevika Consultancy{% endblock %} {% block meta_description %}{{
+Zeevika Consultancy{% endblock %} {% block meta_description %} {{
 job.meta_description|default:job.short_description|default:''|truncatechars:160|striptags
-}}{% endblock %} {% block meta_keywords %}{{ job.meta_keywords|default:"job,
+}} {% endblock %} {% block meta_keywords %} {{ job.meta_keywords|default:"job,
 career, employment, "|add:job.title|add:", "|add:job.city.name|add:",
-"|add:job.state.name }}{% endblock %} {% block extra_meta %}
-<!-- Open Graph / Facebook -->
-<meta
-  property="og:url"
-  content="{{ request.scheme }}://{{ request.get_host }}{{ request.path }}"
-/>
+"|add:job.state.name }} {% endblock %} {# ----------------------- FIXED
+OG/TWITTER META ----------------------- #} {% block extra_meta %} {% load static
+%} {% with BASE=request.scheme|add:"://"|add:request.get_host %}
+<link rel="canonical" href="{{ request.build_absolute_uri }}" />
+
+{# Choose share image: company logo (absolute) OR default static og image #} {%
+if job.company_logo %} {% with SHARE_IMG=BASE|add:job.company_logo.url %}
+<!-- Open Graph -->
+<meta property="og:url" content="{{ request.build_absolute_uri }}" />
 <meta property="og:type" content="article" />
+<meta property="og:site_name" content="Zeevika Consultancy" />
 <meta property="og:title" content="{{ job.title }} | Zeevika Consultancy" />
 <meta
   property="og:description"
-  content="{{ job.meta_description|default:job.short_description|default:''|truncatechars:160|striptags }}"
+  content="{{ job.meta_description|default:job.short_description|default:''|striptags|truncatechars:160 }}"
 />
-<meta property="og:image" content="{{ job.company_logo.url }}" />
-<meta property="og:image:secure_url" content="{{ job.company_logo.url }}" />
-<meta property="og:image:type" content="image/jpeg" />
+<meta property="og:image" content="{{ SHARE_IMG }}" />
+<meta property="og:image:secure_url" content="{{ SHARE_IMG }}" />
 <meta property="og:image:width" content="1200" />
 <meta property="og:image:height" content="630" />
-<meta property="og:site_name" content="Zeevika Consultancy" />
+<meta property="og:image:alt" content="{{ job.company_name }}" />
 
 <!-- Twitter -->
 <meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:site" content="@ZeevikaConsult" />
 <meta name="twitter:title" content="{{ job.title }} | Zeevika Consultancy" />
 <meta
   name="twitter:description"
-  content="{{ job.meta_description|default:job.short_description|default:''|truncatechars:160|striptags }}"
+  content="{{ job.meta_description|default:job.short_description|default:''|striptags|truncatechars:160 }}"
 />
-<meta name="twitter:image" content="{{ job.get_share_image_absolute_url }}" />
+<meta name="twitter:image" content="{{ SHARE_IMG }}" />
+{% endwith %} {% else %} {% with DEFAULT_IMG=static 'img/og-default.jpg' %} {%
+with SHARE_IMG=BASE|add:DEFAULT_IMG %}
+<!-- Open Graph -->
+<meta property="og:url" content="{{ request.build_absolute_uri }}" />
+<meta property="og:type" content="article" />
+<meta property="og:site_name" content="Zeevika Consultancy" />
+<meta property="og:title" content="{{ job.title }} | Zeevika Consultancy" />
+<meta
+  property="og:description"
+  content="{{ job.meta_description|default:job.short_description|default:''|striptags|truncatechars:160 }}"
+/>
+<meta property="og:image" content="{{ SHARE_IMG }}" />
+<meta property="og:image:secure_url" content="{{ SHARE_IMG }}" />
+<meta property="og:image:width" content="1200" />
+<meta property="og:image:height" content="630" />
+<meta property="og:image:alt" content="{{ job.title }}" />
+
+<!-- Twitter -->
+<meta name="twitter:card" content="summary_large_image" />
 <meta name="twitter:site" content="@ZeevikaConsult" />
-{% endblock %} {% block jsonld %}
+<meta name="twitter:title" content="{{ job.title }} | Zeevika Consultancy" />
+<meta
+  name="twitter:description"
+  content="{{ job.meta_description|default:job.short_description|default:''|striptags|truncatechars:160 }}"
+/>
+<meta name="twitter:image" content="{{ SHARE_IMG }}" />
+{% endwith %} {% endwith %} {% endif %} {% endwith %} {% endblock %} {% block
+jsonld %}
 <script type="application/ld+json">
   {
     "@context": "https://schema.org",
@@ -39,8 +69,7 @@ career, employment, "|add:job.title|add:", "|add:job.city.name|add:",
     "title": "{{ job.title|escapejs }}",
     "description": "{{ job.meta_description|default:job.description|escapejs }}",
     "datePosted": "{{ job.created_at|date:'c' }}",
-    {% if job.expires_at %}"validThrough": "{{ job.expires_at|date:'c' }}",
-    {% endif %}
+    {% if job.expires_at %}"validThrough": "{{ job.expires_at|date:'c' }}",{% endif %}
     "employmentType": "{{ job.get_job_type_display|escapejs }}",
     "hiringOrganization": {
       "@type": "Organization",
@@ -104,7 +133,7 @@ career, employment, "|add:job.title|add:", "|add:job.city.name|add:",
           <p class="text-xl opacity-90 mb-2">{{ job.company_name }}</p>
           <p class="text-lg opacity-80">
             <i class="fas fa-map-marker-alt mr-2"></i>
-            {{ job.city.name }}, {{ job.state.name }} {% if job.pin_code %}({{
+            {{ job.city.name }}, {{ job.state.name }}{% if job.pin_code %} ({{
             job.pin_code }}){% endif %}
           </p>
         </div>
@@ -122,6 +151,7 @@ career, employment, "|add:job.title|add:", "|add:job.city.name|add:",
         </p>
       </div>
     </div>
+
     <!-- Social Sharing Buttons -->
     <div class="mt-6">
       <h3 class="text-lg font-medium text-white mb-3">Share this job:</h3>
@@ -291,7 +321,7 @@ career, employment, "|add:job.title|add:", "|add:job.city.name|add:",
             {% for skill in job.skills.all %}
             <span
               class="bg-blue-100 text-blue-800 px-4 py-2 rounded-lg text-base font-medium"
-              >{{skill}}</span
+              >{{ skill }}</span
             >
             {% empty %}
             <span class="text-gray-500">No skills listed for this job.</span>
@@ -375,7 +405,6 @@ career, employment, "|add:job.title|add:", "|add:job.city.name|add:",
   </div>
 </section>
 
-<!-- Related Jobs -->
 {% if related_jobs %}
 <section class="py-16 bg-white">
   <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -688,7 +717,7 @@ career, employment, "|add:job.title|add:", "|add:job.city.name|add:",
   });
 
   // Form submission
-  applicationForm.addEventListener("submit", function (e) {
+  applicationForm.addEventListener("submit", function () {
     const submitBtn = this.querySelector('button[type="submit"]');
     submitBtn.disabled = true;
     submitBtn.innerHTML =
@@ -702,7 +731,6 @@ career, employment, "|add:job.title|add:", "|add:job.city.name|add:",
     opacity: 0,
     ease: "power3.out",
   });
-
   gsap.from(".bg-white", {
     duration: 0.8,
     y: 30,
@@ -715,12 +743,9 @@ career, employment, "|add:job.title|add:", "|add:job.city.name|add:",
   async function copyToClipboard() {
     try {
       const url = window.location.href;
-
-      // Try using the modern Clipboard API first
       if (navigator.clipboard) {
         await navigator.clipboard.writeText(url);
       } else {
-        // Fallback for older browsers
         const el = document.createElement("textarea");
         el.value = url;
         el.setAttribute("readonly", "");
@@ -731,25 +756,19 @@ career, employment, "|add:job.title|add:", "|add:job.city.name|add:",
         document.execCommand("copy");
         document.body.removeChild(el);
       }
-
-      // Show success feedback
       const tooltip = document.getElementById("tooltip");
       const originalText = tooltip.textContent;
       tooltip.textContent = "Copied!";
       tooltip.style.backgroundColor = "#28a745";
-
-      // Reset tooltip after 2 seconds
       setTimeout(() => {
         tooltip.textContent = originalText;
         tooltip.style.backgroundColor = "#333";
       }, 2000);
     } catch (err) {
-      console.error("Failed to copy: ", err);
       const tooltip = document.getElementById("tooltip");
       const originalText = tooltip.textContent;
       tooltip.textContent = "Failed to copy";
       tooltip.style.backgroundColor = "#dc3545";
-
       setTimeout(() => {
         tooltip.textContent = originalText;
         tooltip.style.backgroundColor = "#333";
