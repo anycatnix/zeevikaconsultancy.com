@@ -1,14 +1,13 @@
 {% extends 'base.html' %}
+{% load static %}
 
 {% block title %}{{ blog.title }} - JobPortal Blog{% endblock %}
 {% block meta_description %}{{ blog.meta_description|default:blog.description }}{% endblock %}
 {% block meta_keywords %}{{ blog.meta_keywords|default:"blog, career, job search" }}{% endblock %}
 {% block og_title %}{{ blog.title }}{% endblock %}
 {% block og_description %}{{ blog.meta_description|default:blog.description }}{% endblock %}
-{% block og_image %}{% if blog.image %}{{ request.scheme }}://{{ request.get_host }}{{ blog.image.url }}{% endif %}{%
-endblock %}
-{% block twitter_image %}{% if blog.image %}{{ request.scheme }}://{{ request.get_host }}{{ blog.image.url }}{% endif
-%}{% endblock %}
+{% block og_image %}{% if blog.image %}{{ request.scheme }}://{{ request.get_host }}{{ blog.image.url }}{% else %}{{ request.scheme }}://{{ request.get_host }}{% static 'site/zeevika-logo.png' %}{% endif %}{% endblock %}
+{% block twitter_image %}{% if blog.image %}{{ request.scheme }}://{{ request.get_host }}{{ blog.image.url }}{% else %}{{ request.scheme }}://{{ request.get_host }}{% static 'site/zeevika-logo.png' %}{% endif %}{% endblock %}
 
 {% block jsonld %}
 <script type="application/ld+json">
@@ -17,7 +16,13 @@ endblock %}
   "@type": "BlogPosting",
   "headline": "{{ blog.title|escapejs }}",
   "description": "{{ blog.meta_description|default:blog.description|escapejs }}",
-  "image": [{% if blog.image %}"{{ request.scheme }}://{{ request.get_host }}{{ blog.image.url }}"{% else %}"{{ request.scheme }}://{{ request.get_host }}{% static 'site/zeevika-logo.png' %}"{% endif %}],
+  "image": [
+    {% if blog.image %}
+    "{{ request.scheme }}://{{ request.get_host }}{{ blog.image.url }}"
+    {% else %}
+    "{{ request.scheme }}://{{ request.get_host }}{% static 'site/zeevika-logo.png' %}"
+    {% endif %}
+  ],
   "datePublished": "{{ blog.published_at|date:'c' }}",
   "dateModified": "{{ blog.updated_at|date:'c' }}",
   "author": {

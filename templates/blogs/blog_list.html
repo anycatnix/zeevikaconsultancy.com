@@ -1,4 +1,5 @@
 {% extends 'base.html' %}
+{% load static %}
 
 {% block title %}Career Blogs by Zeevika Consultancy™ – Job Tips, Hiring Trends & HR Insights{% endblock %}
 {% block meta_description %}Read career blogs on job search tips, HR trends, interview guides & hiring insights by
@@ -8,7 +9,7 @@ Zeevika Consultancy articles{% endblock %}
 {% block og_title %}Career Blogs by Zeevika Consultancy™{% endblock %}
 {% block og_description %}Read career blogs on job search tips, HR trends, interview guides & hiring insights by Zeevika
 Consultancy™.{% endblock %}
-{% block og_image %}{{ request.scheme }}://{{ request.get_host }}{% static 'site/zeevika-logo.png' %}{% endblock %}
+{% block og_image %}https://{{ request.get_host }}/static/site/zeevika-logo.png{% endblock %}
 {% block jsonld %}
 <script type="application/ld+json">
 {

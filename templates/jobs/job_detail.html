@@ -1,114 +1,101 @@
-{% extends 'base.html' %} {% load static %} {% block title %}{{ job.title }} |
-Zeevika Consultancy{% endblock %} {% block meta_description %} {{
-job.meta_description|default:job.short_description|default:''|truncatechars:160|striptags
-}} {% endblock %} {% block meta_keywords %} {{ job.meta_keywords|default:"job,
-career, employment, "|add:job.title|add:", "|add:job.city.name|add:",
-"|add:job.state.name }} {% endblock %} {# ----------------------- FIXED
-OG/TWITTER META ----------------------- #} {% block extra_meta %} {% load static
-%} {% with BASE=request.scheme|add:"://"|add:request.get_host %}
-<link rel="canonical" href="{{ request.build_absolute_uri }}" />
+{% extends 'base.html' %}
+{% load static %}
 
-{# Choose share image: company logo (absolute) OR default static og image #} {%
-if job.company_logo %} {% with SHARE_IMG=BASE|add:job.company_logo.url %}
-<!-- Open Graph -->
-<meta property="og:url" content="{{ request.build_absolute_uri }}" />
-<meta property="og:type" content="article" />
-<meta property="og:site_name" content="Zeevika Consultancy" />
-<meta property="og:title" content="{{ job.title }} | Zeevika Consultancy" />
-<meta
-  property="og:description"
-  content="{{ job.meta_description|default:job.short_description|default:''|striptags|truncatechars:160 }}"
-/>
-<meta property="og:image" content="{{ SHARE_IMG }}" />
-<meta property="og:image:secure_url" content="{{ SHARE_IMG }}" />
-<meta property="og:image:width" content="1200" />
-<meta property="og:image:height" content="630" />
-<meta property="og:image:alt" content="{{ job.company_name }}" />
+{% block title %}{{ job.title }} | Zeevika Consultancy{% endblock %}
 
-<!-- Twitter -->
-<meta name="twitter:card" content="summary_large_image" />
-<meta name="twitter:site" content="@ZeevikaConsult" />
-<meta name="twitter:title" content="{{ job.title }} | Zeevika Consultancy" />
-<meta
-  name="twitter:description"
-  content="{{ job.meta_description|default:job.short_description|default:''|striptags|truncatechars:160 }}"
-/>
-<meta name="twitter:image" content="{{ SHARE_IMG }}" />
-{% endwith %} {% else %} {% with DEFAULT_IMG=static 'img/og-default.jpg' %} {%
-with SHARE_IMG=BASE|add:DEFAULT_IMG %}
-<!-- Open Graph -->
-<meta property="og:url" content="{{ request.build_absolute_uri }}" />
-<meta property="og:type" content="article" />
-<meta property="og:site_name" content="Zeevika Consultancy" />
-<meta property="og:title" content="{{ job.title }} | Zeevika Consultancy" />
-<meta
-  property="og:description"
-  content="{{ job.meta_description|default:job.short_description|default:''|striptags|truncatechars:160 }}"
-/>
-<meta property="og:image" content="{{ SHARE_IMG }}" />
-<meta property="og:image:secure_url" content="{{ SHARE_IMG }}" />
-<meta property="og:image:width" content="1200" />
-<meta property="og:image:height" content="630" />
-<meta property="og:image:alt" content="{{ job.title }}" />
+{% block meta_description %}
+    {{ job.meta_description|default:job.short_description|default:''|truncatechars:160|striptags }}
+{% endblock %}
 
-<!-- Twitter -->
-<meta name="twitter:card" content="summary_large_image" />
-<meta name="twitter:site" content="@ZeevikaConsult" />
-<meta name="twitter:title" content="{{ job.title }} | Zeevika Consultancy" />
-<meta
-  name="twitter:description"
-  content="{{ job.meta_description|default:job.short_description|default:''|striptags|truncatechars:160 }}"
-/>
-<meta name="twitter:image" content="{{ SHARE_IMG }}" />
-{% endwith %} {% endwith %} {% endif %} {% endwith %} {% endblock %} {% block
-jsonld %}
-<script type="application/ld+json">
-  {
-    "@context": "https://schema.org",
-    "@type": "JobPosting",
-    "title": "{{ job.title|escapejs }}",
-    "description": "{{ job.meta_description|default:job.description|escapejs }}",
-    "datePosted": "{{ job.created_at|date:'c' }}",
-    {% if job.expires_at %}"validThrough": "{{ job.expires_at|date:'c' }}",{% endif %}
-    "employmentType": "{{ job.get_job_type_display|escapejs }}",
-    "hiringOrganization": {
-      "@type": "Organization",
-      "name": "{{ job.company_name|escapejs }}",
-      {% if job.company_logo %}"logo": "{{ request.scheme }}://{{ request.get_host }}{{ job.company_logo.url }}"{% endif %}
-    },
-    "jobLocation": {
-      "@type": "Place",
-      "address": {
-        "@type": "PostalAddress",
-        "addressLocality": "{{ job.city.name|escapejs }}",
-        "addressRegion": "{{ job.state.name|escapejs }}",
-        "postalCode": "{{ job.pin_code|default:''|escapejs }}",
-        "addressCountry": "IN"
-      }
-    },
-    {% if job.salary_min or job.salary_max %}
-    "baseSalary": {
-      "@type": "MonetaryAmount",
-      "currency": "{{ job.salary_currency }}",
-      "value": {
-        "@type": "QuantitativeValue",
-        {% if job.salary_min %}"minValue": {{ job.salary_min }},{% endif %}
-        {% if job.salary_max %}"maxValue": {{ job.salary_max }},{% endif %}
-        "unitText": "MONTH"
-      }
-    },
-    {% endif %}
-    "applicantLocationRequirements": {
-      "@type": "Country",
-      "name": "India"
-    },
-    "industry": "{{ job.category.name|escapejs }}",
-    "responsibilities": "{{ job.description|striptags|truncatewords:60|escapejs }}",
-    "skills": [{% for skill in job.skills.all %}"{{ skill.name|escapejs }}"{% if not forloop.last %}, {% endif %}{% endfor %}],
-    "url": "{{ request.build_absolute_uri }}"
+{% block meta_keywords %}
+    {{ job.meta_keywords|default:"job, career, employment, "|add:job.title|add:", "|add:job.city.name|add:", "|add:job.state.name }}
+{% endblock %}
+
+{% block extra_meta %}
+    <link rel="canonical" href="{{ request.build_absolute_uri }}" />
+    
+    {% with BASE=request.scheme|add:"://"|add:request.get_host %}
+        {% if job.company_logo %}
+            {% with SHARE_IMG=BASE|add:job.company_logo.url %}
+                <!-- Open Graph -->
+                <meta property="og:url" content="{{ request.build_absolute_uri }}" />
+                <meta property="og:type" content="article" />
+                <meta property="og:site_name" content="Zeevika Consultancy" />
+                <meta property="og:title" content="{{ job.title }} | Zeevika Consultancy" />
+                <meta property="og:description" content="{{ job.meta_description|default:job.short_description|default:''|striptags|truncatechars:160 }}" />
+                <meta property="og:image" content="{{ SHARE_IMG }}" />
+                <meta property="og:image:secure_url" content="{{ SHARE_IMG }}" />
+                <meta property="og:image:width" content="1200" />
+                <meta property="og:image:height" content="630" />
+                <meta property="og:image:alt" content="{{ job.company_name }}" />
+
+                <!-- Twitter -->
+                <meta name="twitter:card" content="summary_large_image" />
+                <meta name="twitter:site" content="@ZeevikaConsult" />
+                <meta name="twitter:title" content="{{ job.title }} | Zeevika Consultancy" />
+                <meta name="twitter:description" content="{{ job.meta_description|default:job.short_description|default:''|striptags|truncatechars:160 }}" />
+                <meta name="twitter:image" content="{{ SHARE_IMG }}" />
+            {% endwith %}
+        {% else %}
+            {% with SHARE_IMG=BASE|add:'/static/images/og-default.jpg' %}
+                <meta property="og:image" content="{{ SHARE_IMG }}" />
+                <meta property="og:image:secure_url" content="{{ SHARE_IMG }}" />
+                <meta property="og:image:width" content="1200" />
+                <meta property="og:image:height" content="630" />
+                <meta property="og:image:alt" content="{{ job.company_name }}" />
+                <meta name="twitter:image" content="{{ SHARE_IMG }}" />
+            {% endwith %}
+        {% endif %}
+    {% endwith %}
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "JobPosting",
+        "title": "{{ job.title|escapejs }}",
+        "description": "{{ job.meta_description|default:job.description|escapejs }}",
+        "datePosted": "{{ job.created_at|date:'c' }}",
+        {% if job.expires_at %}"validThrough": "{{ job.expires_at|date:'c' }}",{% endif %}
+        "employmentType": "{{ job.get_job_type_display|escapejs }}",
+        "hiringOrganization": {
+          "@type": "Organization",
+          "name": "{{ job.company_name|escapejs }}",
+          {% if job.company_logo %}"logo": "{{ request.scheme }}://{{ request.get_host }}{{ job.company_logo.url }}"{% endif %}
+        },
+        "jobLocation": {
+          "@type": "Place",
+          "address": {
+            "@type": "PostalAddress",
+            "addressLocality": "{{ job.city.name|escapejs }}",
+            "addressRegion": "{{ job.state.name|escapejs }}",
+            "postalCode": "{{ job.pin_code|default:''|escapejs }}",
+            "addressCountry": "IN"
+          }
+        },
+        {% if job.salary_min or job.salary_max %}
+        "baseSalary": {
+          "@type": "MonetaryAmount",
+          "currency": "{{ job.salary_currency }}",
+          "value": {
+            "@type": "QuantitativeValue",
+            {% if job.salary_min %}"minValue": {{ job.salary_min }},{% endif %}
+            {% if job.salary_max %}"maxValue": {{ job.salary_max }},{% endif %}
+            "unitText": "MONTH"
+          }
+        },
+        {% endif %}
+        "applicantLocationRequirements": {
+          "@type": "Country",
+          "name": "India"
+        },
+        "industry": "{{ job.category.name|escapejs }}",
+        "responsibilities": "{{ job.description|striptags|truncatewords:60|escapejs }}",
+        "skills": [{% for skill in job.skills.all %}"{{ skill.name|escapejs }}"{% if not forloop.last %}, {% endif %}{% endfor %}],
+        "url": "{{ request.build_absolute_uri }}"
   }
 </script>
-{% endblock %} {% block content %}
+{% endblock %}
+
+{% block content %}
 <!-- Job Header -->
 <section class="bg-gradient-to-r from-primary-600 to-primary-800 py-16">
   <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -133,8 +120,7 @@ jsonld %}
           <p class="text-xl opacity-90 mb-2">{{ job.company_name }}</p>
           <p class="text-lg opacity-80">
             <i class="fas fa-map-marker-alt mr-2"></i>
-            {{ job.city.name }}, {{ job.state.name }}{% if job.pin_code %} ({{
-            job.pin_code }}){% endif %}
+            {{ job.city.name }}, {{ job.state.name }} ({{ job.pin_code }})
           </p>
         </div>
       </div>
@@ -261,8 +247,7 @@ jsonld %}
               <div>
                 <p class="text-sm text-gray-500">Vacancies</p>
                 <p class="font-semibold text-gray-900">
-                  {{ job.total_vacancy }} position{{ job.total_vacancy|pluralize
-                  }}
+                  {{ job.total_vacancy }} position{{ job.total_vacancy|pluralize }}
                 </p>
               </div>
             </div>
@@ -300,7 +285,11 @@ jsonld %}
         <!-- Job Description -->
         <div class="bg-white rounded-lg shadow-lg p-8 mb-8">
           <h2 class="text-2xl font-bold text-gray-900 mb-6">Job Description</h2>
-          <div class="prose max-w-none">{{ job.description|safe }}</div>
+          <div class="prose max-w-none">
+            {% autoescape off %}
+              {{ job.description }}
+            {% endautoescape %}
+          </div>
         </div>
 
         <!-- Education Requirements -->
@@ -309,7 +298,11 @@ jsonld %}
           <h2 class="text-2xl font-bold text-gray-900 mb-6">
             Education Requirements
           </h2>
-          <div class="prose max-w-none">{{ job.education|safe }}</div>
+          <div class="prose max-w-none">
+            {% autoescape off %}
+              {{ job.education }}
+            {% endautoescape %}
+          </div>
         </div>
         {% endif %}
 
@@ -482,10 +475,11 @@ jsonld %}
                 </h3>
                 <div class="mt-2 text-sm text-red-700">
                   <ul class="list-disc pl-5 space-y-1">
-                    {% for field, errors in form_errors.items %} {% for error in
-                    errors %}
-                    <li>{{ field|title }}: {{ error }}</li>
-                    {% endfor %} {% endfor %}
+                    {% for field, errors in form_errors.items %}
+                      {% for error in errors %}
+                        <li>{{ field|title }}: {{ error }}</li>
+                      {% endfor %}
+                    {% endfor %}
                   </ul>
                 </div>
               </div>
@@ -496,11 +490,11 @@ jsonld %}
           <div class="space-y-6">
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div>
-                <label class="block text-sm font-medium text-gray-700 mb-2"
-                  >Full Name *</label
-                >
-                {{ application_form.name }} {% if application_form.name.errors
-                %}
+                <label class="block text-sm font-medium text-gray-700 mb-2">
+                  Full Name *
+                </label>
+                {{ application_form.name }}
+                {% if application_form.name.errors %}
                 <p class="text-red-600 text-sm mt-1">
                   {{ application_form.name.errors.0 }}
                 </p>
@@ -508,11 +502,11 @@ jsonld %}
               </div>
 
               <div>
-                <label class="block text-sm font-medium text-gray-700 mb-2"
-                  >Email *</label
-                >
-                {{ application_form.email }} {% if application_form.email.errors
-                %}
+                <label class="block text-sm font-medium text-gray-700 mb-2">
+                  Email *
+                </label>
+                {{ application_form.email }}
+                {% if application_form.email.errors %}
                 <p class="text-red-600 text-sm mt-1">
                   {{ application_form.email.errors.0 }}
                 </p>
@@ -522,11 +516,11 @@ jsonld %}
 
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div>
-                <label class="block text-sm font-medium text-gray-700 mb-2"
-                  >Phone *</label
-                >
-                {{ application_form.phone }} {% if application_form.phone.errors
-                %}
+                <label class="block text-sm font-medium text-gray-700 mb-2">
+                  Phone *
+                </label>
+                {{ application_form.phone }}
+                {% if application_form.phone.errors %}
                 <p class="text-red-600 text-sm mt-1">
                   {{ application_form.phone.errors.0 }}
                 </p>
@@ -535,21 +529,47 @@ jsonld %}
 
               <div>
                 <label class="block text-sm font-medium text-gray-700 mb-2"
-                  >Total Experience (Years) *</label
+                  >Current CTC (LPA) *</label
                 >
-                {{ application_form.total_experience }} {% if
-                application_form.total_experience.errors %}
+                {{ application_form.current_ctc }}
+                {% if application_form.current_ctc.errors %}
                 <p class="text-red-600 text-sm mt-1">
-                  {{ application_form.total_experience.errors.0 }}
+                  {{ application_form.current_ctc.errors.0 }}
+                </p>
+                {% endif %}
+              </div>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div>
+                <label class="block text-sm font-medium text-gray-700 mb-2">
+                  Total Experience (Years) *
+                </label>
+                {{ application_form.experience }}
+                {% if application_form.experience.errors %}
+                <p class="text-red-600 text-sm mt-1">
+                  {{ application_form.experience.errors.0 }}
+                </p>
+                {% endif %}
+              </div>
+
+              <div>
+                <label class="block text-sm font-medium text-gray-700 mb-2">
+                  Notice Period *
+                </label>
+                {{ application_form.notice_period }}
+                {% if application_form.notice_period.errors %}
+                <p class="text-red-600 text-sm mt-1">
+                  {{ application_form.notice_period.errors.0 }}
                 </p>
                 {% endif %}
               </div>
             </div>
 
             <div>
-              <label class="block text-sm font-medium text-gray-700 mb-2"
-                >CV/Resume *</label
-              >
+              <label class="block text-sm font-medium text-gray-700 mb-2">
+                CV/Resume *
+              </label>
               {{ application_form.cv }}
               <p class="text-sm text-gray-500 mt-1">
                 Accepted formats: PDF, DOC, DOCX (Max 5MB)
@@ -562,11 +582,11 @@ jsonld %}
             </div>
 
             <div>
-              <label class="block text-sm font-medium text-gray-700 mb-2"
-                >Cover Letter/Message</label
-              >
-              {{ application_form.message }} {% if
-              application_form.message.errors %}
+              <label class="block text-sm font-medium text-gray-700 mb-2">
+                Cover Letter/Message
+              </label>
+              {{ application_form.message }}
+              {% if application_form.message.errors %}
               <p class="text-red-600 text-sm mt-1">
                 {{ application_form.message.errors.0 }}
               </p>
@@ -594,7 +614,9 @@ jsonld %}
     </div>
   </div>
 </div>
-{% endblock %} {% block extra_css %}
+{% endblock %}
+
+{% block extra_css %}
 <style>
   .share-buttons {
     display: flex;
