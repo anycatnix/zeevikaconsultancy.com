@@ -1,650 +1,760 @@
-{% extends 'base.html' %}
-{% load static %}
-
-{% block title %}{{ job.title }} | Zeevika Consultancy{% endblock %}
-{% block meta_description %}{{ job.meta_description|default:job.short_description|default:''|truncatechars:160|striptags }}{% endblock %}
-{% block meta_keywords %}{{ job.meta_keywords|default:"job, career, employment, "|add:job.title|add:", "|add:job.city.name|add:", "|add:job.state.name }}{% endblock %}
-
-{% block extra_meta %}
+{% extends 'base.html' %} {% load static %} {% block title %}{{ job.title }} |
+Zeevika Consultancy{% endblock %} {% block meta_description %}{{
+job.meta_description|default:job.short_description|default:''|truncatechars:160|striptags
+}}{% endblock %} {% block meta_keywords %}{{ job.meta_keywords|default:"job,
+career, employment, "|add:job.title|add:", "|add:job.city.name|add:",
+"|add:job.state.name }}{% endblock %} {% block extra_meta %}
 <!-- Open Graph / Facebook -->
-<meta property="og:url" content="{{ request.scheme }}://{{ request.get_host }}{{ request.path }}">
-<meta property="og:type" content="article">
-<meta property="og:title" content="{{ job.title }} | Zeevika Consultancy">
-<meta property="og:description" content="{{ job.meta_description|default:job.short_description|default:''|truncatechars:160|striptags }}">
-<meta property="og:image" content="{{ job.get_share_image_absolute_url }}">
-<meta property="og:image:secure_url" content="{{ job.get_share_image_absolute_url }}">
-<meta property="og:image:type" content="image/jpeg">
-<meta property="og:image:width" content="1200">
-<meta property="og:image:height" content="630">
-<meta property="og:site_name" content="Zeevika Consultancy">
+<meta
+  property="og:url"
+  content="{{ request.scheme }}://{{ request.get_host }}{{ request.path }}"
+/>
+<meta property="og:type" content="article" />
+<meta property="og:title" content="{{ job.title }} | Zeevika Consultancy" />
+<meta
+  property="og:description"
+  content="{{ job.meta_description|default:job.short_description|default:''|truncatechars:160|striptags }}"
+/>
+<meta property="og:image" content="{{ job.company_logo.url }}" />
+<meta property="og:image:secure_url" content="{{ job.company_logo.url }}" />
+<meta property="og:image:type" content="image/jpeg" />
+<meta property="og:image:width" content="1200" />
+<meta property="og:image:height" content="630" />
+<meta property="og:site_name" content="Zeevika Consultancy" />
 
 <!-- Twitter -->
-<meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="{{ job.title }} | Zeevika Consultancy">
-<meta name="twitter:description" content="{{ job.meta_description|default:job.short_description|default:''|truncatechars:160|striptags }}">
-<meta name="twitter:image" content="{{ job.get_share_image_absolute_url }}">
-<meta name="twitter:site" content="@ZeevikaConsult">
-{% endblock %}
-{% block jsonld %}
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:title" content="{{ job.title }} | Zeevika Consultancy" />
+<meta
+  name="twitter:description"
+  content="{{ job.meta_description|default:job.short_description|default:''|truncatechars:160|striptags }}"
+/>
+<meta name="twitter:image" content="{{ job.get_share_image_absolute_url }}" />
+<meta name="twitter:site" content="@ZeevikaConsult" />
+{% endblock %} {% block jsonld %}
 <script type="application/ld+json">
-{
-  "@context": "https://schema.org",
-  "@type": "JobPosting",
-  "title": "{{ job.title|escapejs }}",
-  "description": "{{ job.meta_description|default:job.description|escapejs }}",
-  "datePosted": "{{ job.created_at|date:'c' }}",
-  {% if job.expires_at %}"validThrough": "{{ job.expires_at|date:'c' }}",
-  {% endif %}
-  "employmentType": "{{ job.get_job_type_display|escapejs }}",
-  "hiringOrganization": {
-    "@type": "Organization",
-    "name": "{{ job.company_name|escapejs }}",
-    {% if job.company_logo %}"logo": "{{ request.scheme }}://{{ request.get_host }}{{ job.company_logo.url }}"{% endif %}
-  },
-  "jobLocation": {
-    "@type": "Place",
-    "address": {
-      "@type": "PostalAddress",
-      "addressLocality": "{{ job.city.name|escapejs }}",
-      "addressRegion": "{{ job.state.name|escapejs }}",
-      "postalCode": "{{ job.pin_code|default:''|escapejs }}",
-      "addressCountry": "IN"
-    }
-  },
-  {% if job.salary_min or job.salary_max %}
-  "baseSalary": {
-    "@type": "MonetaryAmount",
-    "currency": "{{ job.salary_currency }}",
-    "value": {
-      "@type": "QuantitativeValue",
-      {% if job.salary_min %}"minValue": {{ job.salary_min }},{% endif %}
-      {% if job.salary_max %}"maxValue": {{ job.salary_max }},{% endif %}
-      "unitText": "MONTH"
-    }
-  },
-  {% endif %}
-  "applicantLocationRequirements": {
-    "@type": "Country",
-    "name": "India"
-  },
-  "industry": "{{ job.category.name|escapejs }}",
-  "responsibilities": "{{ job.description|striptags|truncatewords:60|escapejs }}",
-  "skills": [{% for skill in job.skills.all %}"{{ skill.name|escapejs }}"{% if not forloop.last %}, {% endif %}{% endfor %}],
-  "url": "{{ request.build_absolute_uri }}"
-}
+  {
+    "@context": "https://schema.org",
+    "@type": "JobPosting",
+    "title": "{{ job.title|escapejs }}",
+    "description": "{{ job.meta_description|default:job.description|escapejs }}",
+    "datePosted": "{{ job.created_at|date:'c' }}",
+    {% if job.expires_at %}"validThrough": "{{ job.expires_at|date:'c' }}",
+    {% endif %}
+    "employmentType": "{{ job.get_job_type_display|escapejs }}",
+    "hiringOrganization": {
+      "@type": "Organization",
+      "name": "{{ job.company_name|escapejs }}",
+      {% if job.company_logo %}"logo": "{{ request.scheme }}://{{ request.get_host }}{{ job.company_logo.url }}"{% endif %}
+    },
+    "jobLocation": {
+      "@type": "Place",
+      "address": {
+        "@type": "PostalAddress",
+        "addressLocality": "{{ job.city.name|escapejs }}",
+        "addressRegion": "{{ job.state.name|escapejs }}",
+        "postalCode": "{{ job.pin_code|default:''|escapejs }}",
+        "addressCountry": "IN"
+      }
+    },
+    {% if job.salary_min or job.salary_max %}
+    "baseSalary": {
+      "@type": "MonetaryAmount",
+      "currency": "{{ job.salary_currency }}",
+      "value": {
+        "@type": "QuantitativeValue",
+        {% if job.salary_min %}"minValue": {{ job.salary_min }},{% endif %}
+        {% if job.salary_max %}"maxValue": {{ job.salary_max }},{% endif %}
+        "unitText": "MONTH"
+      }
+    },
+    {% endif %}
+    "applicantLocationRequirements": {
+      "@type": "Country",
+      "name": "India"
+    },
+    "industry": "{{ job.category.name|escapejs }}",
+    "responsibilities": "{{ job.description|striptags|truncatewords:60|escapejs }}",
+    "skills": [{% for skill in job.skills.all %}"{{ skill.name|escapejs }}"{% if not forloop.last %}, {% endif %}{% endfor %}],
+    "url": "{{ request.build_absolute_uri }}"
+  }
 </script>
-{% endblock %}
-
-{% block content %}
+{% endblock %} {% block content %}
 <!-- Job Header -->
 <section class="bg-gradient-to-r from-primary-600 to-primary-800 py-16">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div class="flex items-start justify-between">
-            <div class="flex items-start space-x-6">
-                {% if job.company_logo %}
-                <img src="{{ job.company_logo.url }}" alt="{{ job.company_name }}"
-                    class="w-20 h-20 rounded-lg object-cover bg-white p-2">
-                {% else %}
-                <div class="w-20 h-20 bg-white rounded-lg flex items-center justify-center">
-                    <i class="fas fa-building text-3xl text-primary-600"></i>
-                </div>
-                {% endif %}
-
-                <div class="text-white">
-                    <h1 class="text-3xl font-bold mb-2">{{ job.title }}</h1>
-                    <p class="text-xl opacity-90 mb-2">{{ job.company_name }}</p>
-                    <p class="text-lg opacity-80">
-                        <i class="fas fa-map-marker-alt mr-2"></i>
-                        {{ job.city.name }}, {{ job.state.name }}
-                        {% if job.pin_code %}({{ job.pin_code }}){% endif %}
-                    </p>
-                </div>
-            </div>
-
-            <div class="text-right text-white">
-                <button id="apply-btn"
-                    class="bg-yellow-500 hover:bg-yellow-600 text-gray-900 font-bold py-3 px-8 rounded-lg transition-colors text-lg">
-                    <i class="fas fa-paper-plane mr-2"></i>Apply Now
-                </button>
-                <p class="text-sm opacity-80 mt-2">Posted {{ job.created_at|timesince }} ago</p>
-            </div>
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="flex items-start justify-between">
+      <div class="flex items-start space-x-6">
+        {% if job.company_logo %}
+        <img
+          src="{{ job.company_logo.url }}"
+          alt="{{ job.company_name }}"
+          class="w-20 h-20 rounded-lg object-cover bg-white p-2"
+        />
+        {% else %}
+        <div
+          class="w-20 h-20 bg-white rounded-lg flex items-center justify-center"
+        >
+          <i class="fas fa-building text-3xl text-primary-600"></i>
         </div>
-        <!-- Social Sharing Buttons -->
-        <div class="mt-6">
-            <h3 class="text-lg font-medium text-white mb-3">Share this job:</h3>
-            <div class="share-buttons">
-                <button onclick="copyToClipboard()" class="share-btn copy-link tooltip">
-                    <i class="fas fa-link"></i> Copy Link
-                    <span class="tooltiptext" id="tooltip">Copy to clipboard</span>
-                </button>
-                <a href="https://wa.me/?text={{ job.title|urlencode }}%20{{ request.build_absolute_uri|urlencode }}" target="_blank" class="share-btn whatsapp">
-                    <i class="fab fa-whatsapp"></i> WhatsApp
-                </a>
-                <a href="https://www.linkedin.com/sharing/share-offsite/?url={{ request.build_absolute_uri|urlencode }}" target="_blank" class="share-btn linkedin">
-                    <i class="fab fa-linkedin-in"></i> LinkedIn
-                </a>
-                <a href="https://www.facebook.com/sharer/sharer.php?u={{ request.build_absolute_uri|urlencode }}" target="_blank" class="share-btn facebook">
-                    <i class="fab fa-facebook-f"></i> Facebook
-                </a>
-                <a href="https://twitter.com/intent/tweet?text={{ job.title|urlencode }}&url={{ request.build_absolute_uri|urlencode }}" target="_blank" class="share-btn twitter">
-                    <i class="fab fa-twitter"></i> Twitter
-                </a>
-                <a href="mailto:?subject={{ job.title|urlencode }}&body=Check%20out%20this%20job%20opportunity:%20{{ request.build_absolute_uri|urlencode }}" class="share-btn email">
-                    <i class="fas fa-envelope"></i> Email
-                </a>
-            </div>
+        {% endif %}
+
+        <div class="text-white">
+          <h1 class="text-3xl font-bold mb-2">{{ job.title }}</h1>
+          <p class="text-xl opacity-90 mb-2">{{ job.company_name }}</p>
+          <p class="text-lg opacity-80">
+            <i class="fas fa-map-marker-alt mr-2"></i>
+            {{ job.city.name }}, {{ job.state.name }} {% if job.pin_code %}({{
+            job.pin_code }}){% endif %}
+          </p>
         </div>
+      </div>
+
+      <div class="text-right text-white">
+        <button
+          id="apply-btn"
+          class="bg-yellow-500 hover:bg-yellow-600 text-gray-900 font-bold py-3 px-8 rounded-lg transition-colors text-lg"
+        >
+          <i class="fas fa-paper-plane mr-2"></i>Apply Now
+        </button>
+        <p class="text-sm opacity-80 mt-2">
+          Posted {{ job.created_at|timesince }} ago
+        </p>
+      </div>
     </div>
+    <!-- Social Sharing Buttons -->
+    <div class="mt-6">
+      <h3 class="text-lg font-medium text-white mb-3">Share this job:</h3>
+      <div class="share-buttons">
+        <button onclick="copyToClipboard()" class="share-btn copy-link tooltip">
+          <i class="fas fa-link"></i> Copy Link
+          <span class="tooltiptext" id="tooltip">Copy to clipboard</span>
+        </button>
+        <a
+          href="https://wa.me/?text={{ job.title|urlencode }}%20{{ request.build_absolute_uri|urlencode }}"
+          target="_blank"
+          class="share-btn whatsapp"
+        >
+          <i class="fab fa-whatsapp"></i> WhatsApp
+        </a>
+        <a
+          href="https://www.linkedin.com/sharing/share-offsite/?url={{ request.build_absolute_uri|urlencode }}"
+          target="_blank"
+          class="share-btn linkedin"
+        >
+          <i class="fab fa-linkedin-in"></i> LinkedIn
+        </a>
+        <a
+          href="https://www.facebook.com/sharer/sharer.php?u={{ request.build_absolute_uri|urlencode }}"
+          target="_blank"
+          class="share-btn facebook"
+        >
+          <i class="fab fa-facebook-f"></i> Facebook
+        </a>
+        <a
+          href="https://twitter.com/intent/tweet?text={{ job.title|urlencode }}&url={{ request.build_absolute_uri|urlencode }}"
+          target="_blank"
+          class="share-btn twitter"
+        >
+          <i class="fab fa-twitter"></i> Twitter
+        </a>
+        <a
+          href="mailto:?subject={{ job.title|urlencode }}&body=Check%20out%20this%20job%20opportunity:%20{{ request.build_absolute_uri|urlencode }}"
+          class="share-btn email"
+        >
+          <i class="fas fa-envelope"></i> Email
+        </a>
+      </div>
+    </div>
+  </div>
 </section>
 
 <!-- Job Details -->
 <section class="py-12 bg-gray-50">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
-            <!-- Main Content -->
-            <div class="lg:col-span-2">
-                <!-- Job Overview -->
-                <div class="bg-white rounded-lg shadow-lg p-8 mb-8">
-                    <h2 class="text-2xl font-bold text-gray-900 mb-6">Job Overview</h2>
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+      <!-- Main Content -->
+      <div class="lg:col-span-2">
+        <!-- Job Overview -->
+        <div class="bg-white rounded-lg shadow-lg p-8 mb-8">
+          <h2 class="text-2xl font-bold text-gray-900 mb-6">Job Overview</h2>
 
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                        <div class="flex items-center space-x-3">
-                            <div class="w-10 h-10 bg-primary-100 rounded-lg flex items-center justify-center">
-                                <i class="fas fa-clock text-primary-600"></i>
-                            </div>
-                            <div>
-                                <p class="text-sm text-gray-500">Job Type</p>
-                                <p class="font-semibold text-gray-900">{{ job.get_job_type_display }}</p>
-                            </div>
-                        </div>
-
-                        <div class="flex items-center space-x-3">
-                            <div class="w-10 h-10 bg-primary-100 rounded-lg flex items-center justify-center">
-                                <i class="fas fa-dollar-sign text-primary-600"></i>
-                            </div>
-                            <div>
-                                <p class="text-sm text-gray-500">Salary</p>
-                                <p class="font-semibold text-gray-900">{{ job.get_salary_display }}</p>
-                            </div>
-                        </div>
-
-                        <div class="flex items-center space-x-3">
-                            <div class="w-10 h-10 bg-primary-100 rounded-lg flex items-center justify-center">
-                                <i class="fas fa-briefcase text-primary-600"></i>
-                            </div>
-                            <div>
-                                <p class="text-sm text-gray-500">Experience</p>
-                                <p class="font-semibold text-gray-900">{{ job.get_experience_display }}</p>
-                            </div>
-                        </div>
-
-                        <div class="flex items-center space-x-3">
-                            <div class="w-10 h-10 bg-primary-100 rounded-lg flex items-center justify-center">
-                                <i class="fas fa-users text-primary-600"></i>
-                            </div>
-                            <div>
-                                <p class="text-sm text-gray-500">Vacancies</p>
-                                <p class="font-semibold text-gray-900">{{ job.total_vacancy }} position{{
-                                    job.total_vacancy|pluralize }}</p>
-                            </div>
-                        </div>
-
-                        <div class="flex items-center space-x-3">
-                            <div class="w-10 h-10 bg-primary-100 rounded-lg flex items-center justify-center">
-                                <i class="fas fa-venus-mars text-primary-600"></i>
-                            </div>
-                            <div>
-                                <p class="text-sm text-gray-500">Gender</p>
-                                <p class="font-semibold text-gray-900">{{ job.get_gender_display }}</p>
-                            </div>
-                        </div>
-
-                        <div class="flex items-center space-x-3">
-                            <div class="w-10 h-10 bg-primary-100 rounded-lg flex items-center justify-center">
-                                <i class="fas fa-calendar text-primary-600"></i>
-                            </div>
-                            <div>
-                                <p class="text-sm text-gray-500">Posted</p>
-                                <p class="font-semibold text-gray-900">{{ job.created_at|date:"M d, Y" }}</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Job Description -->
-                <div class="bg-white rounded-lg shadow-lg p-8 mb-8">
-                    <h2 class="text-2xl font-bold text-gray-900 mb-6">Job Description</h2>
-                    <div class="prose max-w-none">
-                        {{ job.description|safe }}
-                    </div>
-                </div>
-
-                <!-- Education Requirements -->
-                {% if job.education %}
-                <div class="bg-white rounded-lg shadow-lg p-8 mb-8">
-                    <h2 class="text-2xl font-bold text-gray-900 mb-6">Education Requirements</h2>
-                    <div class="prose max-w-none">
-                        {{ job.education|safe }}
-                    </div>
-                </div>
-                {% endif %}
-
-                <!-- Skills Required -->
-                {% if job.skills.all %}
-                <div class="bg-white rounded-lg shadow-lg p-8 mb-8">
-                    <h2 class="text-2xl font-bold text-gray-900 mb-6">Skills Required</h2>
-                    <div class="flex flex-wrap gap-3">
-                        {% for skill in job.skills.all %}
-                        <span
-                            class="bg-blue-100 text-blue-800 px-4 py-2 rounded-lg text-base font-medium">{{skill}}</span>
-                        {% empty %}
-                        <span class="text-gray-500">No skills listed for this job.</span>
-                        {% endfor %}
-                    </div>
-                </div>
-                {% endif %}
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div class="flex items-center space-x-3">
+              <div
+                class="w-10 h-10 bg-primary-100 rounded-lg flex items-center justify-center"
+              >
+                <i class="fas fa-clock text-primary-600"></i>
+              </div>
+              <div>
+                <p class="text-sm text-gray-500">Job Type</p>
+                <p class="font-semibold text-gray-900">
+                  {{ job.get_job_type_display }}
+                </p>
+              </div>
             </div>
 
-            <!-- Sidebar -->
-            <div class="lg:col-span-1">
-                <!-- Quick Apply Card -->
-                <div class="bg-white rounded-lg shadow-lg p-6 mb-6 sticky top-24">
-                    <h3 class="text-xl font-bold text-gray-900 mb-4">Quick Apply</h3>
-                    <button id="quick-apply-btn"
-                        class="w-full bg-primary-600 hover:bg-primary-700 text-white font-semibold py-3 px-6 rounded-lg transition-colors mb-4">
-                        <i class="fas fa-paper-plane mr-2"></i>Apply for this Job
-                    </button>
-                    <p class="text-sm text-gray-600 text-center">Application takes less than 2 minutes</p>
-                </div>
-
-                <!-- Company Info -->
-                <div class="bg-white rounded-lg shadow-lg p-6 mb-6">
-                    <h3 class="text-xl font-bold text-gray-900 mb-4">Company Information</h3>
-                    <div class="space-y-3">
-                        <div class="flex items-center space-x-3">
-                            <i class="fas fa-building text-gray-400"></i>
-                            <span class="text-gray-700">{{ job.company_name }}</span>
-                        </div>
-                        <div class="flex items-center space-x-3">
-                            <i class="fas fa-map-marker-alt text-gray-400"></i>
-                            <span class="text-gray-700">{{ job.city.name }}, {{ job.state.name }}</span>
-                        </div>
-                        <div class="flex items-center space-x-3">
-                            <i class="fas fa-tag text-gray-400"></i>
-                            <span class="text-gray-700">{{ job.category.name }}</span>
-                        </div>
-                        <div class="flex items-center space-x-3">
-                            <i class="fas fa-layer-group text-gray-400"></i>
-                            <span class="text-gray-700">{{ job.subcategory.name }}</span>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Job Details -->
-                <div class="bg-white rounded-lg shadow-lg p-6">
-                    <h3 class="text-xl font-bold text-gray-900 mb-4">Job Details</h3>
-                    <div class="space-y-3">
-                        <div class="flex justify-between">
-                            <span class="text-gray-600">Job Type:</span>
-                            <span class="font-medium">{{ job.get_job_type_display }}</span>
-                        </div>
-                        <div class="flex justify-between">
-                            <span class="text-gray-600">Experience:</span>
-                            <span class="font-medium">{{ job.get_experience_display }}</span>
-                        </div>
-                        <div class="flex justify-between">
-                            <span class="text-gray-600">Salary:</span>
-                            <span class="font-medium">{{ job.get_salary_display }}</span>
-                        </div>
-                        <div class="flex justify-between">
-                            <span class="text-gray-600">Vacancies:</span>
-                            <span class="font-medium">{{ job.total_vacancy }}</span>
-                        </div>
-                        <div class="flex justify-between">
-                            <span class="text-gray-600">Gender:</span>
-                            <span class="font-medium">{{ job.get_gender_display }}</span>
-                        </div>
-                    </div>
-                </div>
+            <div class="flex items-center space-x-3">
+              <div
+                class="w-10 h-10 bg-primary-100 rounded-lg flex items-center justify-center"
+              >
+                <i class="fas fa-dollar-sign text-primary-600"></i>
+              </div>
+              <div>
+                <p class="text-sm text-gray-500">Salary</p>
+                <p class="font-semibold text-gray-900">
+                  {{ job.get_salary_display }}
+                </p>
+              </div>
             </div>
+
+            <div class="flex items-center space-x-3">
+              <div
+                class="w-10 h-10 bg-primary-100 rounded-lg flex items-center justify-center"
+              >
+                <i class="fas fa-briefcase text-primary-600"></i>
+              </div>
+              <div>
+                <p class="text-sm text-gray-500">Experience</p>
+                <p class="font-semibold text-gray-900">
+                  {{ job.get_experience_display }}
+                </p>
+              </div>
+            </div>
+
+            <div class="flex items-center space-x-3">
+              <div
+                class="w-10 h-10 bg-primary-100 rounded-lg flex items-center justify-center"
+              >
+                <i class="fas fa-users text-primary-600"></i>
+              </div>
+              <div>
+                <p class="text-sm text-gray-500">Vacancies</p>
+                <p class="font-semibold text-gray-900">
+                  {{ job.total_vacancy }} position{{ job.total_vacancy|pluralize
+                  }}
+                </p>
+              </div>
+            </div>
+
+            <div class="flex items-center space-x-3">
+              <div
+                class="w-10 h-10 bg-primary-100 rounded-lg flex items-center justify-center"
+              >
+                <i class="fas fa-venus-mars text-primary-600"></i>
+              </div>
+              <div>
+                <p class="text-sm text-gray-500">Gender</p>
+                <p class="font-semibold text-gray-900">
+                  {{ job.get_gender_display }}
+                </p>
+              </div>
+            </div>
+
+            <div class="flex items-center space-x-3">
+              <div
+                class="w-10 h-10 bg-primary-100 rounded-lg flex items-center justify-center"
+              >
+                <i class="fas fa-calendar text-primary-600"></i>
+              </div>
+              <div>
+                <p class="text-sm text-gray-500">Posted</p>
+                <p class="font-semibold text-gray-900">
+                  {{ job.created_at|date:"M d, Y" }}
+                </p>
+              </div>
+            </div>
+          </div>
         </div>
+
+        <!-- Job Description -->
+        <div class="bg-white rounded-lg shadow-lg p-8 mb-8">
+          <h2 class="text-2xl font-bold text-gray-900 mb-6">Job Description</h2>
+          <div class="prose max-w-none">{{ job.description|safe }}</div>
+        </div>
+
+        <!-- Education Requirements -->
+        {% if job.education %}
+        <div class="bg-white rounded-lg shadow-lg p-8 mb-8">
+          <h2 class="text-2xl font-bold text-gray-900 mb-6">
+            Education Requirements
+          </h2>
+          <div class="prose max-w-none">{{ job.education|safe }}</div>
+        </div>
+        {% endif %}
+
+        <!-- Skills Required -->
+        {% if job.skills.all %}
+        <div class="bg-white rounded-lg shadow-lg p-8 mb-8">
+          <h2 class="text-2xl font-bold text-gray-900 mb-6">Skills Required</h2>
+          <div class="flex flex-wrap gap-3">
+            {% for skill in job.skills.all %}
+            <span
+              class="bg-blue-100 text-blue-800 px-4 py-2 rounded-lg text-base font-medium"
+              >{{skill}}</span
+            >
+            {% empty %}
+            <span class="text-gray-500">No skills listed for this job.</span>
+            {% endfor %}
+          </div>
+        </div>
+        {% endif %}
+      </div>
+
+      <!-- Sidebar -->
+      <div class="lg:col-span-1">
+        <!-- Quick Apply Card -->
+        <div class="bg-white rounded-lg shadow-lg p-6 mb-6 sticky top-24">
+          <h3 class="text-xl font-bold text-gray-900 mb-4">Quick Apply</h3>
+          <button
+            id="quick-apply-btn"
+            class="w-full bg-primary-600 hover:bg-primary-700 text-white font-semibold py-3 px-6 rounded-lg transition-colors mb-4"
+          >
+            <i class="fas fa-paper-plane mr-2"></i>Apply for this Job
+          </button>
+          <p class="text-sm text-gray-600 text-center">
+            Application takes less than 2 minutes
+          </p>
+        </div>
+
+        <!-- Company Info -->
+        <div class="bg-white rounded-lg shadow-lg p-6 mb-6">
+          <h3 class="text-xl font-bold text-gray-900 mb-4">
+            Company Information
+          </h3>
+          <div class="space-y-3">
+            <div class="flex items-center space-x-3">
+              <i class="fas fa-building text-gray-400"></i>
+              <span class="text-gray-700">{{ job.company_name }}</span>
+            </div>
+            <div class="flex items-center space-x-3">
+              <i class="fas fa-map-marker-alt text-gray-400"></i>
+              <span class="text-gray-700"
+                >{{ job.city.name }}, {{ job.state.name }}</span
+              >
+            </div>
+            <div class="flex items-center space-x-3">
+              <i class="fas fa-tag text-gray-400"></i>
+              <span class="text-gray-700">{{ job.category.name }}</span>
+            </div>
+            <div class="flex items-center space-x-3">
+              <i class="fas fa-layer-group text-gray-400"></i>
+              <span class="text-gray-700">{{ job.subcategory.name }}</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Job Details -->
+        <div class="bg-white rounded-lg shadow-lg p-6">
+          <h3 class="text-xl font-bold text-gray-900 mb-4">Job Details</h3>
+          <div class="space-y-3">
+            <div class="flex justify-between">
+              <span class="text-gray-600">Job Type:</span>
+              <span class="font-medium">{{ job.get_job_type_display }}</span>
+            </div>
+            <div class="flex justify-between">
+              <span class="text-gray-600">Experience:</span>
+              <span class="font-medium">{{ job.get_experience_display }}</span>
+            </div>
+            <div class="flex justify-between">
+              <span class="text-gray-600">Salary:</span>
+              <span class="font-medium">{{ job.get_salary_display }}</span>
+            </div>
+            <div class="flex justify-between">
+              <span class="text-gray-600">Vacancies:</span>
+              <span class="font-medium">{{ job.total_vacancy }}</span>
+            </div>
+            <div class="flex justify-between">
+              <span class="text-gray-600">Gender:</span>
+              <span class="font-medium">{{ job.get_gender_display }}</span>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
+  </div>
 </section>
 
 <!-- Related Jobs -->
 {% if related_jobs %}
 <section class="py-16 bg-white">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <h2 class="text-3xl font-bold text-gray-900 mb-8">Related Jobs</h2>
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {% for related_job in related_jobs %}
-            <div class="bg-gray-50 rounded-lg p-6 hover:bg-gray-100 transition-colors">
-                <h3 class="text-lg font-semibold text-gray-900 mb-2">
-                    <a href="{% url 'jobs:job_detail' related_job.slug %}"
-                        class="hover:text-primary-600 transition-colors">
-                        {{ related_job.title }}
-                    </a>
-                </h3>
-                <p class="text-gray-600 mb-2">{{ related_job.company_name }}</p>
-                <p class="text-gray-500 mb-3">
-                    <i class="fas fa-map-marker-alt mr-1"></i>
-                    {{ related_job.city.name }}, {{ related_job.state.name }}
-                </p>
-                <div class="flex items-center justify-between">
-                    <span class="text-primary-600 font-semibold">{{ related_job.get_salary_display }}</span>
-                    <a href="{% url 'jobs:job_detail' related_job.slug %}"
-                        class="text-primary-600 hover:text-primary-700 font-medium">
-                        View Job <i class="fas fa-arrow-right ml-1"></i>
-                    </a>
-                </div>
-            </div>
-            {% endfor %}
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <h2 class="text-3xl font-bold text-gray-900 mb-8">Related Jobs</h2>
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      {% for related_job in related_jobs %}
+      <div
+        class="bg-gray-50 rounded-lg p-6 hover:bg-gray-100 transition-colors"
+      >
+        <h3 class="text-lg font-semibold text-gray-900 mb-2">
+          <a
+            href="{% url 'jobs:job_detail' related_job.slug %}"
+            class="hover:text-primary-600 transition-colors"
+          >
+            {{ related_job.title }}
+          </a>
+        </h3>
+        <p class="text-gray-600 mb-2">{{ related_job.company_name }}</p>
+        <p class="text-gray-500 mb-3">
+          <i class="fas fa-map-marker-alt mr-1"></i>
+          {{ related_job.city.name }}, {{ related_job.state.name }}
+        </p>
+        <div class="flex items-center justify-between">
+          <span class="text-primary-600 font-semibold"
+            >{{ related_job.get_salary_display }}</span
+          >
+          <a
+            href="{% url 'jobs:job_detail' related_job.slug %}"
+            class="text-primary-600 hover:text-primary-700 font-medium"
+          >
+            View Job <i class="fas fa-arrow-right ml-1"></i>
+          </a>
         </div>
+      </div>
+      {% endfor %}
     </div>
+  </div>
 </section>
 {% endif %}
 
 <!-- Application Modal -->
-<div id="application-modal" class="fixed inset-0 bg-black bg-opacity-50 z-50 hidden">
-    <div class="flex items-center justify-center min-h-screen p-4">
-        <div class="bg-white rounded-lg shadow-xl max-w-2xl w-full max-h-screen overflow-y-auto">
-            <div class="p-6">
-                <div class="flex justify-between items-center mb-6">
-                    <h2 class="text-2xl font-bold text-gray-900">Apply for {{ job.title }}</h2>
-                    <button id="close-modal" class="text-gray-400 hover:text-gray-600">
-                        <i class="fas fa-times text-xl"></i>
-                    </button>
-                </div>
-
-                <form id="application-form" method="post" enctype="multipart/form-data"
-                    action="{% url 'jobs:apply_job' job.id %}">
-                    {% csrf_token %}
-
-                    {% if form_errors %}
-                    <div class="bg-red-50 border border-red-200 rounded-lg p-4 mb-6">
-                        <div class="flex">
-                            <div class="flex-shrink-0">
-                                <i class="fas fa-exclamation-circle text-red-400"></i>
-                            </div>
-                            <div class="ml-3">
-                                <h3 class="text-sm font-medium text-red-800">Please correct the following errors:</h3>
-                                <div class="mt-2 text-sm text-red-700">
-                                    <ul class="list-disc pl-5 space-y-1">
-                                        {% for field, errors in form_errors.items %}
-                                        {% for error in errors %}
-                                        <li>{{ field|title }}: {{ error }}</li>
-                                        {% endfor %}
-                                        {% endfor %}
-                                    </ul>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    {% endif %}
-
-                    <div class="space-y-6">
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                            <div>
-                                <label class="block text-sm font-medium text-gray-700 mb-2">Full Name *</label>
-                                {{ application_form.name }}
-                                {% if application_form.name.errors %}
-                                <p class="text-red-600 text-sm mt-1">{{ application_form.name.errors.0 }}</p>
-                                {% endif %}
-                            </div>
-
-                            <div>
-                                <label class="block text-sm font-medium text-gray-700 mb-2">Email *</label>
-                                {{ application_form.email }}
-                                {% if application_form.email.errors %}
-                                <p class="text-red-600 text-sm mt-1">{{ application_form.email.errors.0 }}</p>
-                                {% endif %}
-                            </div>
-                        </div>
-
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                            <div>
-                                <label class="block text-sm font-medium text-gray-700 mb-2">Phone *</label>
-                                {{ application_form.phone }}
-                                {% if application_form.phone.errors %}
-                                <p class="text-red-600 text-sm mt-1">{{ application_form.phone.errors.0 }}</p>
-                                {% endif %}
-                            </div>
-
-                            <div>
-                                <label class="block text-sm font-medium text-gray-700 mb-2">Total Experience (Years)
-                                    *</label>
-                                {{ application_form.total_experience }}
-                                {% if application_form.total_experience.errors %}
-                                <p class="text-red-600 text-sm mt-1">{{ application_form.total_experience.errors.0 }}
-                                </p>
-                                {% endif %}
-                            </div>
-                        </div>
-
-                        <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-2">CV/Resume *</label>
-                            {{ application_form.cv }}
-                            <p class="text-sm text-gray-500 mt-1">Accepted formats: PDF, DOC, DOCX (Max 5MB)</p>
-                            {% if application_form.cv.errors %}
-                            <p class="text-red-600 text-sm mt-1">{{ application_form.cv.errors.0 }}</p>
-                            {% endif %}
-                        </div>
-
-                        <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-2">Cover Letter/Message</label>
-                            {{ application_form.message }}
-                            {% if application_form.message.errors %}
-                            <p class="text-red-600 text-sm mt-1">{{ application_form.message.errors.0 }}</p>
-                            {% endif %}
-                        </div>
-
-                        <div class="flex justify-end space-x-4 pt-6 border-t">
-                            <button type="button" id="cancel-apply"
-                                class="px-6 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors">
-                                Cancel
-                            </button>
-                            <button type="submit"
-                                class="px-6 py-2 bg-primary-600 hover:bg-primary-700 text-white rounded-lg transition-colors">
-                                Submit Application
-                            </button>
-                        </div>
-                    </div>
-                </form>
-            </div>
+<div
+  id="application-modal"
+  class="fixed inset-0 bg-black bg-opacity-50 z-50 hidden"
+>
+  <div class="flex items-center justify-center min-h-screen p-4">
+    <div
+      class="bg-white rounded-lg shadow-xl max-w-2xl w-full max-h-screen overflow-y-auto"
+    >
+      <div class="p-6">
+        <div class="flex justify-between items-center mb-6">
+          <h2 class="text-2xl font-bold text-gray-900">
+            Apply for {{ job.title }}
+          </h2>
+          <button id="close-modal" class="text-gray-400 hover:text-gray-600">
+            <i class="fas fa-times text-xl"></i>
+          </button>
         </div>
+
+        <form
+          id="application-form"
+          method="post"
+          enctype="multipart/form-data"
+          action="{% url 'jobs:apply_job' job.id %}"
+        >
+          {% csrf_token %} {% if form_errors %}
+          <div class="bg-red-50 border border-red-200 rounded-lg p-4 mb-6">
+            <div class="flex">
+              <div class="flex-shrink-0">
+                <i class="fas fa-exclamation-circle text-red-400"></i>
+              </div>
+              <div class="ml-3">
+                <h3 class="text-sm font-medium text-red-800">
+                  Please correct the following errors:
+                </h3>
+                <div class="mt-2 text-sm text-red-700">
+                  <ul class="list-disc pl-5 space-y-1">
+                    {% for field, errors in form_errors.items %} {% for error in
+                    errors %}
+                    <li>{{ field|title }}: {{ error }}</li>
+                    {% endfor %} {% endfor %}
+                  </ul>
+                </div>
+              </div>
+            </div>
+          </div>
+          {% endif %}
+
+          <div class="space-y-6">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div>
+                <label class="block text-sm font-medium text-gray-700 mb-2"
+                  >Full Name *</label
+                >
+                {{ application_form.name }} {% if application_form.name.errors
+                %}
+                <p class="text-red-600 text-sm mt-1">
+                  {{ application_form.name.errors.0 }}
+                </p>
+                {% endif %}
+              </div>
+
+              <div>
+                <label class="block text-sm font-medium text-gray-700 mb-2"
+                  >Email *</label
+                >
+                {{ application_form.email }} {% if application_form.email.errors
+                %}
+                <p class="text-red-600 text-sm mt-1">
+                  {{ application_form.email.errors.0 }}
+                </p>
+                {% endif %}
+              </div>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div>
+                <label class="block text-sm font-medium text-gray-700 mb-2"
+                  >Phone *</label
+                >
+                {{ application_form.phone }} {% if application_form.phone.errors
+                %}
+                <p class="text-red-600 text-sm mt-1">
+                  {{ application_form.phone.errors.0 }}
+                </p>
+                {% endif %}
+              </div>
+
+              <div>
+                <label class="block text-sm font-medium text-gray-700 mb-2"
+                  >Total Experience (Years) *</label
+                >
+                {{ application_form.total_experience }} {% if
+                application_form.total_experience.errors %}
+                <p class="text-red-600 text-sm mt-1">
+                  {{ application_form.total_experience.errors.0 }}
+                </p>
+                {% endif %}
+              </div>
+            </div>
+
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-2"
+                >CV/Resume *</label
+              >
+              {{ application_form.cv }}
+              <p class="text-sm text-gray-500 mt-1">
+                Accepted formats: PDF, DOC, DOCX (Max 5MB)
+              </p>
+              {% if application_form.cv.errors %}
+              <p class="text-red-600 text-sm mt-1">
+                {{ application_form.cv.errors.0 }}
+              </p>
+              {% endif %}
+            </div>
+
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-2"
+                >Cover Letter/Message</label
+              >
+              {{ application_form.message }} {% if
+              application_form.message.errors %}
+              <p class="text-red-600 text-sm mt-1">
+                {{ application_form.message.errors.0 }}
+              </p>
+              {% endif %}
+            </div>
+
+            <div class="flex justify-end space-x-4 pt-6 border-t">
+              <button
+                type="button"
+                id="cancel-apply"
+                class="px-6 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors"
+              >
+                Cancel
+              </button>
+              <button
+                type="submit"
+                class="px-6 py-2 bg-primary-600 hover:bg-primary-700 text-white rounded-lg transition-colors"
+              >
+                Submit Application
+              </button>
+            </div>
+          </div>
+        </form>
+      </div>
     </div>
+  </div>
 </div>
-{% endblock %}
-
-{% block extra_css %}
+{% endblock %} {% block extra_css %}
 <style>
-    .share-buttons {
-        display: flex;
-        flex-wrap: wrap;
-        gap: 8px;
-        margin: 16px 0;
-    }
-    .share-btn {
-        display: inline-flex;
-        align-items: center;
-        justify-content: center;
-        padding: 8px 16px;
-        border-radius: 4px;
-        color: white;
-        font-weight: 500;
-        font-size: 14px;
-        cursor: pointer;
-        transition: all 0.3s ease;
-        border: none;
-        text-decoration: none;
-    }
-    .share-btn i {
-        margin-right: 6px;
-    }
-    .share-btn:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-    }
-    .share-btn.copy-link {
-        background-color: #6c757d;
-    }
-    .share-btn.whatsapp {
-        background-color: #25D366;
-    }
-    .share-btn.linkedin {
-        background-color: #0077B5;
-    }
-    .share-btn.facebook {
-        background-color: #4267B2;
-    }
-    .share-btn.twitter {
-        background-color: #1DA1F2;
-    }
-    .share-btn.email {
-        background-color: #34A853;
-    }
-    .share-btn.copy-link:hover {
-        background-color: #5a6268;
-    }
-    .tooltip {
-        position: relative;
-        display: inline-block;
-    }
-    .tooltip .tooltiptext {
-        visibility: hidden;
-        width: 120px;
-        background-color: #333;
-        color: #fff;
-        text-align: center;
-        border-radius: 6px;
-        padding: 5px;
-        position: absolute;
-        z-index: 1;
-        bottom: 125%;
-        left: 50%;
-        margin-left: -60px;
-        opacity: 0;
-        transition: opacity 0.3s;
-        font-size: 12px;
-    }
-    .tooltip .tooltiptext::after {
-        content: "";
-        position: absolute;
-        top: 100%;
-        left: 50%;
-        margin-left: -5px;
-        border-width: 5px;
-        border-style: solid;
-        border-color: #333 transparent transparent transparent;
-    }
-    .tooltip:hover .tooltiptext {
-        visibility: visible;
-        opacity: 1;
-    }
+  .share-buttons {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin: 16px 0;
+  }
+  .share-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 8px 16px;
+    border-radius: 4px;
+    color: white;
+    font-weight: 500;
+    font-size: 14px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    border: none;
+    text-decoration: none;
+  }
+  .share-btn i {
+    margin-right: 6px;
+  }
+  .share-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  }
+  .share-btn.copy-link {
+    background-color: #6c757d;
+  }
+  .share-btn.whatsapp {
+    background-color: #25d366;
+  }
+  .share-btn.linkedin {
+    background-color: #0077b5;
+  }
+  .share-btn.facebook {
+    background-color: #4267b2;
+  }
+  .share-btn.twitter {
+    background-color: #1da1f2;
+  }
+  .share-btn.email {
+    background-color: #34a853;
+  }
+  .share-btn.copy-link:hover {
+    background-color: #5a6268;
+  }
+  .tooltip {
+    position: relative;
+    display: inline-block;
+  }
+  .tooltip .tooltiptext {
+    visibility: hidden;
+    width: 120px;
+    background-color: #333;
+    color: #fff;
+    text-align: center;
+    border-radius: 6px;
+    padding: 5px;
+    position: absolute;
+    z-index: 1;
+    bottom: 125%;
+    left: 50%;
+    margin-left: -60px;
+    opacity: 0;
+    transition: opacity 0.3s;
+    font-size: 12px;
+  }
+  .tooltip .tooltiptext::after {
+    content: "";
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    margin-left: -5px;
+    border-width: 5px;
+    border-style: solid;
+    border-color: #333 transparent transparent transparent;
+  }
+  .tooltip:hover .tooltiptext {
+    visibility: visible;
+    opacity: 1;
+  }
 </style>
-{% endblock %}
-
-{% block extra_js %}
-<script src="https://kit.fontawesome.com/your-code.js" crossorigin="anonymous"></script>
+{% endblock %} {% block extra_js %}
+<script
+  src="https://kit.fontawesome.com/your-code.js"
+  crossorigin="anonymous"
+></script>
 <script>
-    // Modal functionality
-    const modal = document.getElementById('application-modal');
-    const applyBtn = document.getElementById('apply-btn');
-    const quickApplyBtn = document.getElementById('quick-apply-btn');
-    const closeModal = document.getElementById('close-modal');
-    const cancelApply = document.getElementById('cancel-apply');
-    const applicationForm = document.getElementById('application-form');
+  // Modal functionality
+  const modal = document.getElementById("application-modal");
+  const applyBtn = document.getElementById("apply-btn");
+  const quickApplyBtn = document.getElementById("quick-apply-btn");
+  const closeModal = document.getElementById("close-modal");
+  const cancelApply = document.getElementById("cancel-apply");
+  const applicationForm = document.getElementById("application-form");
 
-    function openModal() {
-        modal.classList.remove('hidden');
-        document.body.style.overflow = 'hidden';
+  function openModal() {
+    modal.classList.remove("hidden");
+    document.body.style.overflow = "hidden";
+  }
+
+  function closeModalFunc() {
+    modal.classList.add("hidden");
+    document.body.style.overflow = "auto";
+  }
+
+  applyBtn.addEventListener("click", openModal);
+  quickApplyBtn.addEventListener("click", openModal);
+  closeModal.addEventListener("click", closeModalFunc);
+  cancelApply.addEventListener("click", closeModalFunc);
+
+  // Close modal when clicking outside
+  modal.addEventListener("click", function (e) {
+    if (e.target === modal) {
+      closeModalFunc();
     }
+  });
 
-    function closeModalFunc() {
-        modal.classList.add('hidden');
-        document.body.style.overflow = 'auto';
+  // Form submission
+  applicationForm.addEventListener("submit", function (e) {
+    const submitBtn = this.querySelector('button[type="submit"]');
+    submitBtn.disabled = true;
+    submitBtn.innerHTML =
+      '<i class="fas fa-spinner fa-spin mr-2"></i>Submitting...';
+  });
+
+  // GSAP animations
+  gsap.from(".bg-gradient-to-r", {
+    duration: 1,
+    y: -50,
+    opacity: 0,
+    ease: "power3.out",
+  });
+
+  gsap.from(".bg-white", {
+    duration: 0.8,
+    y: 30,
+    opacity: 0,
+    ease: "power3.out",
+    stagger: 0.1,
+  });
+
+  // Copy to clipboard function
+  async function copyToClipboard() {
+    try {
+      const url = window.location.href;
+
+      // Try using the modern Clipboard API first
+      if (navigator.clipboard) {
+        await navigator.clipboard.writeText(url);
+      } else {
+        // Fallback for older browsers
+        const el = document.createElement("textarea");
+        el.value = url;
+        el.setAttribute("readonly", "");
+        el.style.position = "absolute";
+        el.style.left = "-9999px";
+        document.body.appendChild(el);
+        el.select();
+        document.execCommand("copy");
+        document.body.removeChild(el);
+      }
+
+      // Show success feedback
+      const tooltip = document.getElementById("tooltip");
+      const originalText = tooltip.textContent;
+      tooltip.textContent = "Copied!";
+      tooltip.style.backgroundColor = "#28a745";
+
+      // Reset tooltip after 2 seconds
+      setTimeout(() => {
+        tooltip.textContent = originalText;
+        tooltip.style.backgroundColor = "#333";
+      }, 2000);
+    } catch (err) {
+      console.error("Failed to copy: ", err);
+      const tooltip = document.getElementById("tooltip");
+      const originalText = tooltip.textContent;
+      tooltip.textContent = "Failed to copy";
+      tooltip.style.backgroundColor = "#dc3545";
+
+      setTimeout(() => {
+        tooltip.textContent = originalText;
+        tooltip.style.backgroundColor = "#333";
+      }, 2000);
     }
-
-    applyBtn.addEventListener('click', openModal);
-    quickApplyBtn.addEventListener('click', openModal);
-    closeModal.addEventListener('click', closeModalFunc);
-    cancelApply.addEventListener('click', closeModalFunc);
-
-    // Close modal when clicking outside
-    modal.addEventListener('click', function (e) {
-        if (e.target === modal) {
-            closeModalFunc();
-        }
-    });
-
-    // Form submission
-    applicationForm.addEventListener('submit', function (e) {
-        const submitBtn = this.querySelector('button[type="submit"]');
-        submitBtn.disabled = true;
-        submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i>Submitting...';
-    });
-
-    // GSAP animations
-    gsap.from(".bg-gradient-to-r", {
-        duration: 1,
-        y: -50,
-        opacity: 0,
-        ease: "power3.out"
-    });
-
-    gsap.from(".bg-white", {
-        duration: 0.8,
-        y: 30,
-        opacity: 0,
-        ease: "power3.out",
-        stagger: 0.1
-    });
-
-    // Copy to clipboard function
-    async function copyToClipboard() {
-        try {
-            const url = window.location.href;
-            
-            // Try using the modern Clipboard API first
-            if (navigator.clipboard) {
-                await navigator.clipboard.writeText(url);
-            } else {
-                // Fallback for older browsers
-                const el = document.createElement('textarea');
-                el.value = url;
-                el.setAttribute('readonly', '');
-                el.style.position = 'absolute';
-                el.style.left = '-9999px';
-                document.body.appendChild(el);
-                el.select();
-                document.execCommand('copy');
-                document.body.removeChild(el);
-            }
-            
-            // Show success feedback
-            const tooltip = document.getElementById('tooltip');
-            const originalText = tooltip.textContent;
-            tooltip.textContent = 'Copied!';
-            tooltip.style.backgroundColor = '#28a745';
-            
-            // Reset tooltip after 2 seconds
-            setTimeout(() => {
-                tooltip.textContent = originalText;
-                tooltip.style.backgroundColor = '#333';
-            }, 2000);
-            
-        } catch (err) {
-            console.error('Failed to copy: ', err);
-            const tooltip = document.getElementById('tooltip');
-            const originalText = tooltip.textContent;
-            tooltip.textContent = 'Failed to copy';
-            tooltip.style.backgroundColor = '#dc3545';
-            
-            setTimeout(() => {
-                tooltip.textContent = originalText;
-                tooltip.style.backgroundColor = '#333';
-            }, 2000);
-        }
-    }
+  }
 </script>
 {% endblock %}
