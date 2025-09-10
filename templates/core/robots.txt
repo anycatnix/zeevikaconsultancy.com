@@ -1,0 +1,19 @@
+User-agent: *
+Allow: /
+
+# Sitemap
+Sitemap: {{ request.scheme }}://{{ request.get_host }}/sitemap.xml
+
+# Disallow admin and private areas
+Disallow: /admin/
+Disallow: /media/private/
+Disallow: /static/admin/
+
+# Allow important pages
+Allow: /jobs/
+Allow: /blogs/
+Allow: /about/
+Allow: /contact/
+
+# Crawl delay (optional)
+Crawl-delay: 1

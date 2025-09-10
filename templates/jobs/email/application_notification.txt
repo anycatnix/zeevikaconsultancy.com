@@ -1,0 +1,34 @@
+New Job Application Received
+============================
+
+A new candidate has applied for a position at your company.
+
+JOB DETAILS:
+------------
+Title: {{ job.title }}
+Company: {{ job.company_name }}
+Location: {{ job.city.name }}, {{ job.state.name }}
+Job Type: {{ job.get_job_type_display }}
+Salary: {{ job.get_salary_display }}
+
+CANDIDATE INFORMATION:
+---------------------
+Name: {{ application.name }}
+Email: {{ application.email }}
+Phone: {{ application.phone }}
+Experience: {{ application.total_experience }} years
+Applied: {{ application.applied_at|date:"F d, Y at g:i A" }}
+
+{% if application.message %}
+Message: {{ application.message }}
+{% endif %}
+
+CV/Resume: The candidate has uploaded their CV/Resume with this application.
+
+View Full Application: {{ request.scheme }}://{{ request.get_host }}/admin/jobs/candidateapplication/{{ application.id }}/change/
+
+---
+This is an automated notification from JobPortal. Please do not reply to this email.
+
+© 2024 JobPortal. All rights reserved.
+If you have any questions, please contact us at support@jobportal.com

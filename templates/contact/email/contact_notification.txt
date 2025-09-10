@@ -1,0 +1,24 @@
+New Contact Form Submission
+===========================
+
+A new message has been submitted through the contact form.
+
+CONTACT INFORMATION:
+-------------------
+Name: {{ contact.name }}
+Email: {{ contact.email }}
+{% if contact.phone %}Phone: {{ contact.phone }}{% endif %}
+Subject: {{ contact.get_subject_display }}
+Submitted: {{ contact.created_at|date:"F d, Y at g:i A" }}
+
+MESSAGE:
+--------
+{{ contact.message }}
+
+View in Admin Panel: {{ request.scheme }}://{{ request.get_host }}/admin/contact/contact/{{ contact.id }}/change/
+
+---
+This is an automated notification from JobPortal. Please do not reply to this email.
+
+© 2024 JobPortal. All rights reserved.
+If you have any questions, please contact us at support@jobportal.com

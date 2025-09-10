@@ -1,0 +1,225 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Contact Zeevika Consultancy™ – Best Job Consultancy in Lucknow{% endblock %}
+{% block meta_description %}Contact Zeevika Consultancy™ for recruitment, staffing & job consultancy services in
+Lucknow. Call 8188998899 | info@zeevika.in{% endblock %}
+{% block meta_keywords %}contact Zeevika Consultancy, job consultancy contact Lucknow, HR consultancy phone number,
+staffing services Lucknow, best consultancy India{% endblock %}
+
+{% block content %}
+<!-- Page Header -->
+<section class="bg-gradient-to-r from-primary-600 to-primary-800 py-16">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="text-center text-white">
+            <h1 class="text-4xl font-bold mb-4">Contact Zeevika Consultancy™</h1>
+            <p class="text-xl opacity-90">Your Trusted Recruitment Partner in Lucknow</p>
+        </div>
+    </div>
+</section>
+
+<!-- Contact Content -->
+<section class="py-16 bg-gray-50">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-12">
+            <!-- Contact Form -->
+            <div class="bg-white rounded-lg shadow-lg p-8">
+                <h2 class="text-3xl font-bold text-gray-900 mb-6">Send us a Message</h2>
+
+                <form method="post" class="space-y-6">
+                    {% csrf_token %}
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Full Name *</label>
+                            <input type="text" name="name" required
+                                class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Email *</label>
+                            <input type="email" name="email" required
+                                class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent">
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Phone Number *</label>
+                            <input type="tel" name="phone" required
+                                class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Subject</label>
+                            <input type="text" name="subject"
+                                class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent">
+                        </div>
+                    </div>
+
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Your Message *</label>
+                        <textarea name="message" rows="4" required
+                            class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent"></textarea>
+                    </div>
+
+                    <div class="pt-2">
+                        <button type="submit"
+                            class="w-full bg-primary-600 hover:bg-primary-700 text-white font-semibold py-3 px-6 rounded-lg transition-colors">
+                            Send Message
+                        </button>
+                    </div>
+                </form>
+            </div>
+
+            <!-- Contact Information -->
+            <div class="space-y-8">
+                <!-- Contact Details -->
+                <div class="bg-white rounded-lg shadow-lg p-8">
+                    <h2 class="text-3xl font-bold text-gray-900 mb-6">Contact Information</h2>
+
+                    <div class="space-y-6">
+                        <div class="flex items-start">
+                            <div class="flex-shrink-0 bg-primary-100 p-3 rounded-full">
+                                <i class="fas fa-map-marker-alt text-primary-600 text-xl"></i>
+                            </div>
+                            <div class="ml-4">
+                                <h3 class="text-lg font-semibold text-gray-900">Our Office</h3>
+                                <p class="mt-1 text-gray-600">
+                                    UGF, 293, 294 Sahara Shopping Centre First Floor,<br>
+                                    Near Lekhraj Market Metro Station Gate No 3,<br>
+                                    Lucknow, Indira Nagar, Faizabad Road,<br>
+                                    Uttar Pradesh, India
+                                </p>
+                                <p class="mt-2 text-sm text-gray-500">Visit us for career guidance and job support.</p>
+                            </div>
+                        </div>
+
+                        <div class="flex items-start">
+                            <div class="flex-shrink-0 bg-primary-100 p-3 rounded-full">
+                                <i class="fas fa-phone-alt text-primary-600 text-xl"></i>
+                            </div>
+                            <div class="ml-4">
+                                <h3 class="text-lg font-semibold text-gray-900">Phone Numbers</h3>
+                                <p class="mt-1 text-gray-600">
+                                    <a href="tel:+919984703333" class="hover:text-primary-600 font-medium">+91
+                                        9984703333</a><br>
+                                    <span class="text-sm text-gray-500">Speak with our support and recruitment
+                                        team.</span>
+                                </p>
+                            </div>
+                        </div>
+
+                        <div class="flex items-start">
+                            <div class="flex-shrink-0 bg-primary-100 p-3 rounded-full">
+                                <i class="fas fa-envelope text-primary-600 text-xl"></i>
+                            </div>
+                            <div class="ml-4">
+                                <h3 class="text-lg font-semibold text-gray-900">Email Address</h3>
+                                <p class="mt-1 text-gray-600">
+                                    <a href="mailto:info@zeevikaconsultancy.com"
+                                        class="hover:text-primary-600 font-medium">info@zeevikaconsultancy.com</a>
+                                </p>
+                                <p class="text-sm text-gray-500 mt-1">For all career, partnership, and employer
+                                    inquiries.</p>
+                            </div>
+                        </div>
+
+                        <div class="flex items-start">
+                            <div class="flex-shrink-0 bg-primary-100 p-3 rounded-full">
+                                <i class="fab fa-whatsapp text-primary-600 text-xl"></i>
+                            </div>
+                            <div class="ml-4">
+                                <h3 class="text-lg font-semibold text-gray-900">WhatsApp</h3>
+                                <p class="mt-1 text-gray-600">
+                                    <a href="https://wa.me/91818898899" target="_blank"
+                                        class="text-green-600 hover:text-green-700 font-medium">
+                                        <i class="fab fa-whatsapp mr-2"></i>Chat with us on WhatsApp
+                                    </a>
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="mt-8 pt-6 border-t border-gray-200">
+                        <h3 class="text-lg font-semibold text-gray-900 mb-4">Business Hours</h3>
+                        <ul class="space-y-2 text-gray-600">
+                            <li class="flex justify-between">
+                                <span>Monday - Friday</span>
+                                <span>9:00 AM - 7:00 PM</span>
+                            </li>
+                            <li class="flex justify-between">
+                                <span>Saturday</span>
+                                <span>10:00 AM - 5:00 PM</span>
+                            </li>
+                            <li class="flex justify-between">
+                                <span>Sunday</span>
+                                <span>Closed</span>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Quick Links -->
+                <div class="bg-white rounded-lg shadow-lg p-8">
+                    <h2 class="text-3xl font-bold text-gray-900 mb-6">Quick Links</h2>
+
+                    <div class="space-y-4">
+                        <a href="{% url 'jobs:job_list' %}"
+                            class="flex items-center text-gray-700 hover:text-primary-600 group">
+                            <i class="fas fa-chevron-right text-primary-600 mr-2 group-hover:mr-3 transition-all"></i>
+                            Browse All Jobs
+                        </a>
+                        <a href="{% url 'jobs:home' %}"
+                            class="flex items-center text-gray-700 hover:text-primary-600 group">
+                            <i class="fas fa-chevron-right text-primary-600 mr-2 group-hover:mr-3 transition-all"></i>
+                            Home
+                        </a>
+                        <a href="{% url 'core:about' %}"
+                            class="flex items-center text-gray-700 hover:text-primary-600 group">
+                            <i class="fas fa-chevron-right text-primary-600 mr-2 group-hover:mr-3 transition-all"></i>
+                            About Us
+                        </a>
+                        <a href="{% url 'blogs:blog_list' %}"
+                            class="flex items-center text-gray-700 hover:text-primary-600 group">
+                            <i class="fas fa-chevron-right text-primary-600 mr-2 group-hover:mr-3 transition-all"></i>
+                            Career Blog
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Map Section -->
+<section class="py-16 bg-white">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <h2 class="text-3xl font-bold text-center text-gray-900 mb-12">Our Location</h2>
+        <div class="rounded-xl overflow-hidden shadow-xl">
+            <iframe
+                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3557.374199466462!2d80.94182631504589!3d26.92371718311964!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x399957b5a64d9a1f%3A0x2b3a2f1a3a3e3a1f!2sHazratganj%2C%20Lucknow%2C%20Uttar%20Pradesh%20226001!5e0!3m2!1sen!2sin!4v1620000000000!5m2!1sen!2sin"
+                width="100%" height="450" style="border:0;" allowfullscreen="" loading="lazy" class="w-full h-[450px]"
+                title="Zeevika Consultancy Location">
+            </iframe>
+        </div>
+    </div>
+</section>
+
+<!-- CTA Section -->
+<section class="bg-primary-700 text-white py-16">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+        <h2 class="text-3xl font-bold mb-4">Need Immediate Assistance?</h2>
+        <p class="text-xl mb-8 max-w-3xl mx-auto">Our team is ready to help you with your recruitment needs or job
+            search.</p>
+        <div class="flex flex-col sm:flex-row justify-center gap-4">
+            <a href="tel:8188998899"
+                class="bg-white text-primary-700 hover:bg-gray-100 font-semibold py-3 px-8 rounded-lg transition-colors">
+                <i class="fas fa-phone-alt mr-2"></i> Call Us Now
+            </a>
+            <a href="https://wa.me/91818898899" target="_blank"
+                class="bg-green-600 hover:bg-green-700 text-white font-semibold py-3 px-8 rounded-lg transition-colors">
+                <i class="fab fa-whatsapp mr-2"></i> WhatsApp Us
+            </a>
+        </div>
+    </div>
+</section>
+{% endblock %}

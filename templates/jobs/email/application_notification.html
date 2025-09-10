@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>New Job Application</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+            border-radius: 10px 10px 0 0;
+        }
+        .content {
+            background: #f8f9fa;
+            padding: 30px;
+            border-radius: 0 0 10px 10px;
+        }
+        .job-details {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            margin: 20px 0;
+            border-left: 4px solid #667eea;
+        }
+        .candidate-details {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            margin: 20px 0;
+            border-left: 4px solid #28a745;
+        }
+        .btn {
+            display: inline-block;
+            background: #667eea;
+            color: white;
+            padding: 12px 24px;
+            text-decoration: none;
+            border-radius: 5px;
+            margin: 10px 0;
+        }
+        .footer {
+            text-align: center;
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 1px solid #ddd;
+            color: #666;
+            font-size: 14px;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>New Job Application Received</h1>
+        <p>A new candidate has applied for a position at your company</p>
+    </div>
+    
+    <div class="content">
+        <h2>Job Details</h2>
+        <div class="job-details">
+            <h3>{{ job.title }}</h3>
+            <p><strong>Company:</strong> {{ job.company_name }}</p>
+            <p><strong>Location:</strong> {{ job.city.name }}, {{ job.state.name }}</p>
+            <p><strong>Job Type:</strong> {{ job.get_job_type_display }}</p>
+            <p><strong>Salary:</strong> {{ job.get_salary_display }}</p>
+        </div>
+        
+        <h2>Candidate Information</h2>
+        <div class="candidate-details">
+            <p><strong>Name:</strong> {{ application.name }}</p>
+            <p><strong>Email:</strong> {{ application.email }}</p>
+            <p><strong>Phone:</strong> {{ application.phone }}</p>
+            <p><strong>Experience:</strong> {{ application.total_experience }} years</p>
+            <p><strong>Applied:</strong> {{ application.applied_at|date:"F d, Y at g:i A" }}</p>
+            {% if application.message %}
+            <p><strong>Message:</strong></p>
+            <p>{{ application.message }}</p>
+            {% endif %}
+        </div>
+        
+        <p><strong>CV/Resume:</strong> The candidate has uploaded their CV/Resume with this application.</p>
+        
+        <div style="text-align: center; margin: 30px 0;">
+            <a href="{{ request.scheme }}://{{ request.get_host }}/admin/jobs/candidateapplication/{{ application.id }}/change/" class="btn">
+                View Full Application
+            </a>
+        </div>
+        
+        <p><em>This is an automated notification from JobPortal. Please do not reply to this email.</em></p>
+    </div>
+    
+    <div class="footer">
+        <p>&copy; 2024 JobPortal. All rights reserved.</p>
+        <p>If you have any questions, please contact us at support@jobportal.com</p>
+    </div>
+</body>
+</html>

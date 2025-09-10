@@ -1,0 +1,493 @@
+{% extends 'base.html' %}
+
+{% block title %}Zeevika Consultancy™ – #1 Job Consultancy in Lucknow, India{% endblock %}
+{% block meta_description %}Zeevika Consultancy™ is a top recruitment agency in Lucknow offering jobs, staffing, HR
+services & career solutions. Call 8188998899 today.{% endblock %}
+{% block meta_keywords %}job consultancy in Lucknow, best job consultancy in Lucknow, recruitment agency in Lucknow, HR
+consultancy India, job placement Lucknow, free job consultancy for freshers, Zeevika Consultancy{% endblock %}
+
+{% block content %}
+<!-- Hero Section -->
+<section class="hero-gradient min-h-screen flex items-center relative overflow-hidden">
+    <div class="absolute inset-0 bg-black opacity-20"></div>
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+        <div class="text-center text-white">
+            <h1 class="text-5xl md:text-7xl font-bold mb-6 hero-title">
+                Find Your <span class="text-yellow-300">Dream Job</span>
+            </h1>
+            <p class="text-xl md:text-2xl mb-8 hero-subtitle opacity-90">
+                Discover thousands of job opportunities with all the information you need. Its your future.
+            </p>
+
+            <!-- Search Form -->
+            <div class="max-w-4xl mx-auto hero-form">
+                <form method="get" action="{% url 'jobs:job_list' %}" class="bg-white rounded-lg p-6 shadow-2xl">
+                    <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+                        <div class="md:col-span-2">
+                            <input type="text" name="keyword" placeholder="Job title, keywords, or company"
+                                class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent text-gray-900 placeholder-gray-400">
+                        </div>
+                        <div>
+                            <input type="text" name="location" placeholder="City, state, or remote"
+                                class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent text-gray-900 placeholder-gray-400">
+                        </div>
+                        <div>
+                            <button type="submit"
+                                class="w-full bg-primary-600 hover:bg-primary-700 text-white font-semibold py-3 px-6 rounded-lg transition-colors">
+                                <i class="fas fa-search mr-2"></i>Search Jobs
+                            </button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+
+            <!-- Stats -->
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mt-16 hero-stats">
+                <div class="text-center">
+                    <div class="text-4xl font-bold text-yellow-300 mb-2">{{ total_jobs|default:"1000" }}+</div>
+                    <div class="text-lg opacity-90">Active Jobs</div>
+                </div>
+                <div class="text-center">
+                    <div class="text-4xl font-bold text-yellow-300 mb-2">{{ total_companies|default:"500" }}+</div>
+                    <div class="text-lg opacity-90">Companies</div>
+                </div>
+                <div class="text-center">
+                    <div class="text-4xl font-bold text-yellow-300 mb-2">{{ total_applications|default:"50" }}K+</div>
+                    <div class="text-lg opacity-90">Applications</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Animated Background -->
+    <div class="absolute inset-0 overflow-hidden">
+        <div class="absolute -top-40 -right-40 w-80 h-80 bg-white opacity-10 rounded-full"></div>
+        <div class="absolute -bottom-40 -left-40 w-80 h-80 bg-white opacity-10 rounded-full"></div>
+    </div>
+</section>
+
+<!-- Job Categories Section -->
+<section class="py-20 bg-white">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="text-center mb-16 animate-on-scroll">
+            <h2 class="text-4xl font-bold text-gray-900 mb-4">Popular Job Categories</h2>
+            <p class="text-xl text-gray-600">Explore jobs by category and find your perfect match</p>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+            {% for category in categories %}
+            <div class="bg-white rounded-lg shadow-lg p-6 hover-lift animate-on-scroll">
+                <div class="text-center">
+                    <div class="w-16 h-16 bg-primary-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                        <i class="{{ category.icon|default:'fas fa-briefcase' }} text-2xl text-primary-600"></i>
+                    </div>
+                    <h3 class="text-xl font-semibold text-gray-900 mb-2">{{ category.name }}</h3>
+                    <p class="text-gray-600 mb-4">{{ category.description|truncatewords:10 }}</p>
+                    <a href="{% url 'jobs:category_detail' category.slug %}"
+                        class="text-primary-600 hover:text-primary-700 font-medium">
+                        View Jobs <i class="fas fa-arrow-right ml-1"></i>
+                    </a>
+                </div>
+            </div>
+            {% empty %}
+            <!-- Default categories if none exist -->
+            <div class="bg-white rounded-lg shadow-lg p-6 hover-lift animate-on-scroll">
+                <div class="text-center">
+                    <div class="w-16 h-16 bg-primary-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                        <i class="fas fa-code text-2xl text-primary-600"></i>
+                    </div>
+                    <h3 class="text-xl font-semibold text-gray-900 mb-2">Technology</h3>
+                    <p class="text-gray-600 mb-4">Software development, IT, and tech roles</p>
+                    <a href="#" class="text-primary-600 hover:text-primary-700 font-medium">
+                        View Jobs <i class="fas fa-arrow-right ml-1"></i>
+                    </a>
+                </div>
+            </div>
+            <div class="bg-white rounded-lg shadow-lg p-6 hover-lift animate-on-scroll">
+                <div class="text-center">
+                    <div class="w-16 h-16 bg-primary-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                        <i class="fas fa-chart-line text-2xl text-primary-600"></i>
+                    </div>
+                    <h3 class="text-xl font-semibold text-gray-900 mb-2">Finance</h3>
+                    <p class="text-gray-600 mb-4">Banking, accounting, and financial services</p>
+                    <a href="#" class="text-primary-600 hover:text-primary-700 font-medium">
+                        View Jobs <i class="fas fa-arrow-right ml-1"></i>
+                    </a>
+                </div>
+            </div>
+            <div class="bg-white rounded-lg shadow-lg p-6 hover-lift animate-on-scroll">
+                <div class="text-center">
+                    <div class="w-16 h-16 bg-primary-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                        <i class="fas fa-heartbeat text-2xl text-primary-600"></i>
+                    </div>
+                    <h3 class="text-xl font-semibold text-gray-900 mb-2">Healthcare</h3>
+                    <p class="text-gray-600 mb-4">Medical, nursing, and healthcare positions</p>
+                    <a href="#" class="text-primary-600 hover:text-primary-700 font-medium">
+                        View Jobs <i class="fas fa-arrow-right ml-1"></i>
+                    </a>
+                </div>
+            </div>
+            <div class="bg-white rounded-lg shadow-lg p-6 hover-lift animate-on-scroll">
+                <div class="text-center">
+                    <div class="w-16 h-16 bg-primary-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                        <i class="fas fa-graduation-cap text-2xl text-primary-600"></i>
+                    </div>
+                    <h3 class="text-xl font-semibold text-gray-900 mb-2">Education</h3>
+                    <p class="text-gray-600 mb-4">Teaching, training, and educational roles</p>
+                    <a href="#" class="text-primary-600 hover:text-primary-700 font-medium">
+                        View Jobs <i class="fas fa-arrow-right ml-1"></i>
+                    </a>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+
+<!-- Tags Section -->
+<section class="py-20 bg-gray-50">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="text-center mb-16 animate-on-scroll">
+            <h2 class="text-4xl font-bold text-gray-900 mb-4">Tags</h2>
+            <div class="flex flex-wrap justify-center gap-3">
+                <span class="bg-blue-100 text-blue-800 px-4 py-2 rounded-lg text-base font-medium">HR career path</span>
+                <span class="bg-blue-100 text-blue-800 px-4 py-2 rounded-lg text-base font-medium">HR interview
+                    questions and answers</span>
+                <span class="bg-blue-100 text-blue-800 px-4 py-2 rounded-lg text-base font-medium">HR job
+                    description</span>
+                <span class="bg-blue-100 text-blue-800 px-4 py-2 rounded-lg text-base font-medium">HR job
+                    openings</span>
+                <span class="bg-blue-100 text-blue-800 px-4 py-2 rounded-lg text-base font-medium">HR job titles and
+                    descriptions</span>
+                <span class="bg-blue-100 text-blue-800 px-4 py-2 rounded-lg text-base font-medium">HR jobs near
+                    me</span>
+                <span class="bg-blue-100 text-blue-800 px-4 py-2 rounded-lg text-base font-medium">HR soft skills</span>
+                <span class="bg-blue-100 text-blue-800 px-4 py-2 rounded-lg text-base font-medium">apply for HR jobs
+                    online</span>
+                <span class="bg-blue-100 text-blue-800 px-4 py-2 rounded-lg text-base font-medium">best HR courses
+                    online</span>
+                <span class="bg-blue-100 text-blue-800 px-4 py-2 rounded-lg text-base font-medium">common HR job
+                    interview mistakes</span>
+                <span class="bg-blue-100 text-blue-800 px-4 py-2 rounded-lg text-base font-medium">communication skills
+                    for HR professionals</span>
+                <span class="bg-blue-100 text-blue-800 px-4 py-2 rounded-lg text-base font-medium">cover letter for HR
+                    assistant</span>
+                <span class="bg-blue-100 text-blue-800 px-4 py-2 rounded-lg text-base font-medium">difference between HR
+                    and recruiter</span>
+                <span class="bg-blue-100 text-blue-800 px-4 py-2 rounded-lg text-base font-medium">entry level HR
+                    jobs</span>
+                <span class="bg-blue-100 text-blue-800 px-4 py-2 rounded-lg text-base font-medium">how to get HR job
+                    interviews</span>
+                <span class="bg-blue-100 text-blue-800 px-4 py-2 rounded-lg text-base font-medium">how to get a job in
+                    HR with no experience</span>
+                <span class="bg-blue-100 text-blue-800 px-4 py-2 rounded-lg text-base font-medium">how to get into HR
+                    without a degree</span>
+                <span class="bg-blue-100 text-blue-800 px-4 py-2 rounded-lg text-base font-medium">is HR a good
+                    career</span>
+                <span class="bg-blue-100 text-blue-800 px-4 py-2 rounded-lg text-base font-medium">remote HR jobs</span>
+                <span class="bg-blue-100 text-blue-800 px-4 py-2 rounded-lg text-base font-medium">resume for HR
+                    jobs</span>
+                <span class="bg-blue-100 text-blue-800 px-4 py-2 rounded-lg text-base font-medium">skills required for
+                    HR jobs</span>
+                <span class="bg-blue-100 text-blue-800 px-4 py-2 rounded-lg text-base font-medium">top HR
+                    certifications</span>
+                <span class="bg-blue-100 text-blue-800 px-4 py-2 rounded-lg text-base font-medium">types of HR
+                    jobs</span>
+                <span class="bg-blue-100 text-blue-800 px-4 py-2 rounded-lg text-base font-medium">what is the role of
+                    HR in a company</span>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Latest Jobs Section -->
+<section class="py-20 bg-gray-50">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="text-center mb-16 animate-on-scroll">
+            <h2 class="text-4xl font-bold text-gray-900 mb-4">Latest Job Opportunities</h2>
+            <p class="text-xl text-gray-600">Discover the most recent job postings from top companies</p>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            {% for job in latest_jobs %}
+            <div class="bg-white rounded-lg shadow-lg p-6 flex flex-col justify-between hover-lift animate-on-scroll">
+                <div class="flex items-center mb-4">
+                    {% if job.company_logo %}
+                    <img src="{{ job.company_logo.url }}" alt="{{ job.company_name }}"
+                        class="w-12 h-12 rounded-lg object-cover mr-3">
+                    {% else %}
+                    <div class="w-12 h-12 bg-primary-100 rounded-lg flex items-center justify-center mr-3">
+                        <i class="fas fa-building text-primary-600"></i>
+                    </div>
+                    {% endif %}
+                    <div>
+                        <h3 class="text-lg font-bold text-gray-900 leading-tight mb-1">{{ job.title }}</h3>
+                        <div class="text-sm text-gray-500">{{ job.company_name }}</div>
+                        <div class="text-xs text-gray-400">{{ job.city.name }}, {{ job.state.name }}</div>
+                    </div>
+                </div>
+                <div class="mb-4">
+                    <p class="text-gray-700 text-sm line-clamp-3">{{ job.description|truncatewords:20 }}</p>
+                </div>
+                <div class="flex items-center justify-between mt-auto">
+                    <span class="bg-green-100 text-green-800 text-xs font-medium px-2.5 py-0.5 rounded">
+                        {{ job.get_job_type_display|default:"Job" }}
+                    </span>
+                    <a href="{% url 'jobs:job_detail' job.slug %}"
+                        class="bg-primary-600 hover:bg-primary-700 text-white text-sm font-semibold py-2 px-4 rounded-lg transition-colors">
+                        View Details <i class="fas fa-arrow-right ml-1"></i>
+                    </a>
+                </div>
+            </div>
+            {% endfor %}
+</section>
+
+<!-- Why Choose Us Section -->
+<section class="py-20 bg-gray-50">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="text-center mb-16 animate-on-scroll">
+            <h2 class="text-4xl font-bold text-gray-900 mb-4">Why Choose JobPortal</h2>
+            <p class="text-xl text-gray-600">We make job hunting simple and effective</p>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+            <div class="text-center animate-on-scroll">
+                <div class="w-16 h-16 bg-primary-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                    <i class="fas fa-shield-alt text-2xl text-primary-600"></i>
+                </div>
+                <h3 class="text-xl font-semibold text-gray-900 mb-2">Secure & Safe</h3>
+                <p class="text-gray-600">Your data is protected with industry-standard security measures.</p>
+            </div>
+
+            <div class="text-center animate-on-scroll">
+                <div class="w-16 h-16 bg-primary-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                    <i class="fas fa-clock text-2xl text-primary-600"></i>
+                </div>
+                <h3 class="text-xl font-semibold text-gray-900 mb-2">24/7 Support</h3>
+                <p class="text-gray-600">Get help whenever you need it with our round-the-clock support team.</p>
+            </div>
+
+            <div class="text-center animate-on-scroll">
+                <div class="w-16 h-16 bg-primary-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                    <i class="fas fa-users text-2xl text-primary-600"></i>
+                </div>
+                <h3 class="text-xl font-semibold text-gray-900 mb-2">Verified Companies</h3>
+                <p class="text-gray-600">All companies are verified to ensure legitimate job opportunities.</p>
+            </div>
+
+            <div class="text-center animate-on-scroll">
+                <div class="w-16 h-16 bg-primary-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                    <i class="fas fa-mobile-alt text-2xl text-primary-600"></i>
+                </div>
+                <h3 class="text-xl font-semibold text-gray-900 mb-2">Mobile Friendly</h3>
+                <p class="text-gray-600">Apply for jobs on the go with our mobile-optimized platform.</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Top Hiring Companies Section -->
+<section class="py-20 bg-white">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="text-center mb-16 animate-on-scroll">
+            <h2 class="text-4xl font-bold text-gray-900 mb-4">Top Hiring Companies</h2>
+            <p class="text-xl text-gray-600">Work with the best companies in the industry</p>
+        </div>
+
+        <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-8">
+            {% for company in featured_companies %}
+            <div class="text-center animate-on-scroll">
+                {% if company.logo %}
+                <img src="{{ company.logo.url }}" alt="{{ company.name }}"
+                    class="w-20 h-20 mx-auto mb-4 object-contain">
+                {% else %}
+                <div class="w-20 h-20 bg-gray-100 rounded-lg flex items-center justify-center mx-auto mb-4">
+                    <i class="fas fa-building text-2xl text-gray-400"></i>
+                </div>
+                {% endif %}
+                <h3 class="text-sm font-medium text-gray-900">{{ company.name }}</h3>
+            </div>
+            {% empty %}
+            <!-- Default companies if none exist -->
+            <div class="text-center animate-on-scroll">
+                <div class="w-20 h-20 bg-gray-100 rounded-lg flex items-center justify-center mx-auto mb-4">
+                    <i class="fas fa-building text-2xl text-gray-400"></i>
+                </div>
+                <h3 class="text-sm font-medium text-gray-900">TechCorp</h3>
+            </div>
+            <div class="text-center animate-on-scroll">
+                <div class="w-20 h-20 bg-gray-100 rounded-lg flex items-center justify-center mx-auto mb-4">
+                    <i class="fas fa-building text-2xl text-gray-400"></i>
+                </div>
+                <h3 class="text-sm font-medium text-gray-900">InnovateSoft</h3>
+            </div>
+            <div class="text-center animate-on-scroll">
+                <div class="w-20 h-20 bg-gray-100 rounded-lg flex items-center justify-center mx-auto mb-4">
+                    <i class="fas fa-building text-2xl text-gray-400"></i>
+                </div>
+                <h3 class="text-sm font-medium text-gray-900">GlobalTech</h3>
+            </div>
+            <div class="text-center animate-on-scroll">
+                <div class="w-20 h-20 bg-gray-100 rounded-lg flex items-center justify-center mx-auto mb-4">
+                    <i class="fas fa-building text-2xl text-gray-400"></i>
+                </div>
+                <h3 class="text-sm font-medium text-gray-900">FutureCorp</h3>
+            </div>
+            <div class="text-center animate-on-scroll">
+                <div class="w-20 h-20 bg-gray-100 rounded-lg flex items-center justify-center mx-auto mb-4">
+                    <i class="fas fa-building text-2xl text-gray-400"></i>
+                </div>
+                <h3 class="text-sm font-medium text-gray-900">SmartSolutions</h3>
+            </div>
+            <div class="text-center animate-on-scroll">
+                <div class="w-20 h-20 bg-gray-100 rounded-lg flex items-center justify-center mx-auto mb-4">
+                    <i class="fas fa-building text-2xl text-gray-400"></i>
+                </div>
+                <h3 class="text-sm font-medium text-gray-900">DataFlow</h3>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+
+<!-- Latest Blogs Section -->
+<section class="py-20 bg-gray-50">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="text-center mb-16 animate-on-scroll">
+            <h2 class="text-4xl font-bold text-gray-900 mb-4">Latest from Our Blog</h2>
+            <p class="text-xl text-gray-600">Career tips, industry insights, and job search advice</p>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            {% for blog in latest_blogs %}
+            <div class="bg-white rounded-lg shadow-lg overflow-hidden hover-lift animate-on-scroll">
+                {% if blog.image %}
+                <img src="{{ blog.image.url }}" alt="{{ blog.title }}" class="w-full h-48 object-cover">
+                {% else %}
+                <div class="w-full h-48 bg-gray-200 flex items-center justify-center">
+                    <i class="fas fa-image text-4xl text-gray-400"></i>
+                </div>
+                {% endif %}
+                <div class="p-6">
+                    <h3 class="text-xl font-semibold text-gray-900 mb-2">{{ blog.title }}</h3>
+                    <p class="text-gray-600 mb-4">{{ blog.excerpt }}</p>
+                    <div class="flex items-center justify-between">
+                        <span class="text-sm text-gray-500">{{ blog.published_at|date:"M d, Y" }}</span>
+                        <a href="{% url 'blogs:blog_detail' blog.slug %}"
+                            class="text-primary-600 hover:text-primary-700 font-medium">
+                            Read More <i class="fas fa-arrow-right ml-1"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+            {% empty %}
+            <!-- Default blogs if none exist -->
+            <div class="bg-white rounded-lg shadow-lg overflow-hidden hover-lift animate-on-scroll">
+                <div class="w-full h-48 bg-gray-200 flex items-center justify-center">
+                    <i class="fas fa-image text-4xl text-gray-400"></i>
+                </div>
+                <div class="p-6">
+                    <h3 class="text-xl font-semibold text-gray-900 mb-2">How to Ace Your Job Interview</h3>
+                    <p class="text-gray-600 mb-4">Essential tips and strategies to help you succeed in your next job
+                        interview...</p>
+                    <div class="flex items-center justify-between">
+                        <span class="text-sm text-gray-500">Dec 15, 2024</span>
+                        <a href="#" class="text-primary-600 hover:text-primary-700 font-medium">
+                            Read More <i class="fas fa-arrow-right ml-1"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+            <div class="bg-white rounded-lg shadow-lg overflow-hidden hover-lift animate-on-scroll">
+                <div class="w-full h-48 bg-gray-200 flex items-center justify-center">
+                    <i class="fas fa-image text-4xl text-gray-400"></i>
+                </div>
+                <div class="p-6">
+                    <h3 class="text-xl font-semibold text-gray-900 mb-2">Building a Strong Resume</h3>
+                    <p class="text-gray-600 mb-4">Learn how to create a compelling resume that stands out to
+                        employers...</p>
+                    <div class="flex items-center justify-between">
+                        <span class="text-sm text-gray-500">Dec 10, 2024</span>
+                        <a href="#" class="text-primary-600 hover:text-primary-700 font-medium">
+                            Read More <i class="fas fa-arrow-right ml-1"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+            <div class="bg-white rounded-lg shadow-lg overflow-hidden hover-lift animate-on-scroll">
+                <div class="w-full h-48 bg-gray-200 flex items-center justify-center">
+                    <i class="fas fa-image text-4xl text-gray-400"></i>
+                </div>
+                <div class="p-6">
+                    <h3 class="text-xl font-semibold text-gray-900 mb-2">Remote Work Best Practices</h3>
+                    <p class="text-gray-600 mb-4">Discover the best practices for working remotely and staying
+                        productive...</p>
+                    <div class="flex items-center justify-between">
+                        <span class="text-sm text-gray-500">Dec 5, 2024</span>
+                        <a href="#" class="text-primary-600 hover:text-primary-700 font-medium">
+                            Read More <i class="fas fa-arrow-right ml-1"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+
+        <div class="text-center mt-12 animate-on-scroll">
+            <a href="{% url 'blogs:blog_list' %}"
+                class="inline-flex items-center bg-white hover:bg-gray-50 text-primary-600 font-semibold py-3 px-8 rounded-lg border-2 border-primary-600 transition-colors">
+                View All Blogs <i class="fas fa-arrow-right ml-2"></i>
+            </a>
+        </div>
+    </div>
+</section>
+
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    // Hero section animations - run immediately when page loads
+    gsap.from(".hero-title", {
+        duration: 1.2,
+        y: 100,
+        opacity: 0,
+        ease: "power3.out"
+    });
+
+    gsap.from(".hero-subtitle", {
+        duration: 1.2,
+        y: 50,
+        opacity: 0,
+        ease: "power3.out",
+        delay: 0.3
+    });
+
+    gsap.from(".hero-form", {
+        duration: 1.2,
+        y: 50,
+        opacity: 0,
+        ease: "power3.out",
+        delay: 0.6
+    });
+
+    gsap.from(".hero-stats", {
+        duration: 1.2,
+        y: 50,
+        opacity: 0,
+        ease: "power3.out",
+        delay: 0.9
+    });
+
+    // Parallax effect for hero background
+    gsap.to(".hero-gradient .absolute", {
+        y: -100,
+        ease: "none",
+        scrollTrigger: {
+            trigger: ".hero-gradient",
+            start: "top bottom",
+            end: "bottom top",
+            scrub: true
+        }
+    });
+</script>
+{% endblock %}
