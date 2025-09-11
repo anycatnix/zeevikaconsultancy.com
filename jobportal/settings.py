@@ -56,6 +56,7 @@ INSTALLED_APPS = [
     'taggit',
     'simple_history',
     'django_extensions',
+     'widget_tweaks',
     
     # Local apps
     'core',
