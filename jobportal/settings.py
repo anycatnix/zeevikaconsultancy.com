@@ -143,6 +143,10 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.2/howto/static-files/
 
+# Authentication
+LOGIN_REDIRECT_URL = 'accounts:profile'
+LOGOUT_REDIRECT_URL = 'jobs:home'
+
 STATIC_URL = '/static/'
 STATIC_ROOT = '/var/www/zeevika.com/staticfiles'
 
