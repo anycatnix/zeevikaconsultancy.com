@@ -47,6 +47,9 @@ urlpatterns = [
     path('blogs/', include('blogs.urls')),
     path('contact/', include('contact.urls')),
     path('about/', include('core.urls')),
+    path('accounts/', include('accounts.urls')),  
+    path('accounts/', include('django.contrib.auth.urls')),  
+    
     path('ckeditor/', include('ckeditor_uploader.urls')),
     
     # SEO

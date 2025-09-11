@@ -1,6 +1,7 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib import messages
 from django.core.paginator import Paginator
+from django.db import models
 from django.db.models import Q
 from django.http import JsonResponse
 from django.core.mail import send_mail
@@ -26,6 +27,10 @@ def home(request):
     # Fetch latest blogs from Blog model
     from blogs.models import Blog
     latest_blogs = Blog.objects.filter(is_published=True).order_by('-published_at')[:3]
+    
+    # Fetch featured companies
+    from core.models import Company
+    featured_companies = Company.objects.filter(is_active=True, is_featured=True)[:6]
 
     context = {
         'featured_jobs': featured_jobs,
@@ -33,6 +38,7 @@ def home(request):
         'categories': categories,
         'search_form': JobSearchForm(),
         'latest_blogs': latest_blogs,
+        'featured_companies': featured_companies,
     }
     return render(request, 'jobs/home.html', context)
 
@@ -183,15 +189,26 @@ def apply_job(request, job_id):
 def category_detail(request, slug):
     """Show jobs by category"""
     category = get_object_or_404(Category, slug=slug, is_active=True)
-    jobs = JobPost.objects.filter(category=category, is_active=True)
+    jobs = JobPost.objects.filter(
+        category=category, 
+        is_active=True
+    ).order_by('-created_at')
     
-    paginator = Paginator(jobs, 20)
+    # Get active categories with job counts
+    categories = Category.objects.filter(
+        is_active=True
+    ).annotate(
+        job_count=models.Count('jobs', filter=Q(jobs__is_active=True))
+    ).order_by('name')
+    
+    paginator = Paginator(jobs, 10)  # Show 10 jobs per page
     page_number = request.GET.get('page')
     page_obj = paginator.get_page(page_number)
     
     context = {
         'category': category,
         'jobs': page_obj,
+        'categories': categories,
         'search_form': JobSearchForm(),
     }
     return render(request, 'jobs/category_detail.html', context)

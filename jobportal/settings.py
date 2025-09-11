@@ -62,6 +62,7 @@ INSTALLED_APPS = [
     'jobs',
     'blogs',
     'contact',
+    'accounts.apps.AccountsConfig',  # Add this line
 ]
 
 MIDDLEWARE = [

@@ -16,29 +16,12 @@ consultancy India, job placement Lucknow, free job consultancy for freshers, Zee
                 Find Your <span class="text-yellow-300">Dream Job</span>
             </h1>
             <p class="text-xl md:text-2xl mb-8 hero-subtitle opacity-90">
-                Discover thousands of job opportunities with all the information you need. Its your future.
+                Discover thousands of job opportunities with all the information you need. It's your future.
             </p>
 
             <!-- Search Form -->
-            <div class="max-w-4xl mx-auto hero-form">
-                <form method="get" action="{% url 'jobs:job_list' %}" class="bg-white rounded-lg p-6 shadow-2xl">
-                    <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
-                        <div class="md:col-span-2">
-                            <input type="text" name="keyword" placeholder="Job title, keywords, or company"
-                                class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent text-gray-900 placeholder-gray-400">
-                        </div>
-                        <div>
-                            <input type="text" name="location" placeholder="City, state, or remote"
-                                class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent text-gray-900 placeholder-gray-400">
-                        </div>
-                        <div>
-                            <button type="submit"
-                                class="w-full bg-primary-600 hover:bg-primary-700 text-white font-semibold py-3 px-6 rounded-lg transition-colors">
-                                <i class="fas fa-search mr-2"></i>Search Jobs
-                            </button>
-                        </div>
-                    </div>
-                </form>
+            <div class="max-w-6xl mx-auto hero-form">
+                {% include 'components/search_bar.html' %}
             </div>
 
             <!-- Stats -->
